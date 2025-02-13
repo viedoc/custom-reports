@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ODM xmlns:v4="http://www.viedoc.net/ns/v4" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:def="http://www.cdisc.org/ns/def/v2.0" FileType="Snapshot" CreationDateTime="0001-01-01T00:00:00" xmlns="http://www.cdisc.org/ns/odm/v1.3">
+  <Study>
+    <MetaDataVersion OID="SURVIVALCURVE" Name="SurvivalCurve" Description="SurvivalCurve" def:DefineVersion="2.0.0">
+      <Include />
+      <Protocol>
+        <Description />
+      </Protocol>
+      <ItemGroupDef OID="SURVIVALCURVE" Name="SurvivalCurve" Repeating="Yes" SASDatasetName="SURVIVALCURVE" Domain="SurvivalCurve" Purpose="Tabulation">
+        <Description />
+        <ItemRef ItemOID="SURVIVALCURVE.SUBJID" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.RFICDAT" MethodOID="MD.SURVIVALCURVE.RFICDAT" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.DSCOMP" MethodOID="MD.SURVIVALCURVE.DSCOMP" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.DSSTDAT" MethodOID="MD.SURVIVALCURVE.DSSTDAT" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.DSDECOD" MethodOID="MD.SURVIVALCURVE.DSDECOD" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.DTHDAT" MethodOID="MD.SURVIVALCURVE.DTHDAT" Mandatory="Yes" />
+      </ItemGroupDef>
+      <ItemDef OID="SURVIVALCURVE.SUBJID" Name="Subject ID" DataType="string" SASFieldName="SubjId">
+        <Description>
+          <TranslatedText xml:lang="en">Subject ID</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+        <def:ValueListRef ValueListOID="VL.SURVIVALCURVE.SUBJID" />
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.SUBJID.SUBJID1" Name="Subject ID" DataType="string" SASFieldName="SubjId1">
+        <Description>
+          <TranslatedText xml:lang="en">Subject ID</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.SUBJID.SUBJID2" Name="SiteCode - SeqNr" DataType="string" SASFieldName="SubjId2">
+        <Description>
+          <TranslatedText xml:lang="en">SiteCode - SeqNr</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.RFICDAT" Name="Informed Consent Date" DataType="string" SASFieldName="RFICDAT">
+        <Description>
+          <TranslatedText xml:lang="en">Informed Consent Date</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.DSCOMP" Name="Completed?" DataType="string" SASFieldName="DSCOMP">
+        <Description>
+          <TranslatedText xml:lang="en">Completed?</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.DSSTDAT" Name="End Date" DataType="string" SASFieldName="DSSTDAT">
+        <Description>
+          <TranslatedText xml:lang="en">End Date</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.DSDECOD" Name="Reason discontinued" DataType="string" SASFieldName="DSDECOD">
+        <Description>
+          <TranslatedText xml:lang="en">Reason discontinued</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <ItemDef OID="SURVIVALCURVE.DTHDAT" Name="Death date" DataType="string" SASFieldName="DTHDAT">
+        <Description>
+          <TranslatedText xml:lang="en">Death date</TranslatedText>
+        </Description>
+        <def:Origin Type="CRF">
+          <Description />
+        </def:Origin>
+      </ItemDef>
+      <MethodDef OID="MD.SURVIVALCURVE.SUBJID.SUBJID1">
+        <Description>
+          <TranslatedText xml:lang="en">{SubjectKey}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{SubjectKey}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.SUBJID.SUBJID2">
+        <Description>
+          <TranslatedText xml:lang="en">SE-{SiteCode}-{SiteSubjectSeqNo}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">SE-{SiteCode}-{SiteSubjectSeqNo}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.RFICDAT">
+        <Description>
+          <TranslatedText xml:lang="en">{E00_DM.DM.RFICDAT}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{E00_DM.DM.RFICDAT}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.DSCOMP">
+        <Description>
+          <TranslatedText xml:lang="en">{E21_EOS.DS.DSCOMP}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{E21_EOS.DS.DSCOMP}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.DSSTDAT">
+        <Description>
+          <TranslatedText xml:lang="en">{E21_EOS.DS.DSSTDAT}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{E21_EOS.DS.DSSTDAT}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.DSDECOD">
+        <Description>
+          <TranslatedText xml:lang="en">{E21_EOS.DS.DSDECOD}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{E21_EOS.DS.DSDECOD}</FormalExpression>
+      </MethodDef>
+      <MethodDef OID="MD.SURVIVALCURVE.DTHDAT">
+        <Description>
+          <TranslatedText xml:lang="en">{E21_EOS.DS.DTHDAT}</TranslatedText>
+        </Description>
+        <FormalExpression Context="Viedoc Expression">{E21_EOS.DS.DTHDAT}</FormalExpression>
+      </MethodDef>
+      <def:ValueListDef OID="VL.SURVIVALCURVE.SUBJID">
+        <ItemRef ItemOID="SURVIVALCURVE.SUBJID.SUBJID1" MethodOID="MD.SURVIVALCURVE.SUBJID.SUBJID1" Mandatory="Yes" />
+        <ItemRef ItemOID="SURVIVALCURVE.SUBJID.SUBJID2" MethodOID="MD.SURVIVALCURVE.SUBJID.SUBJID2" Mandatory="Yes" />
+      </def:ValueListDef>
+    </MetaDataVersion>
+  </Study>
+</ODM>
