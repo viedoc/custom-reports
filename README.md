@@ -212,7 +212,7 @@ This variable is a list that contains the ODM elements information.
 </details>
 
 ## Utility functions
-see [utilityFunctions.R]
+see utilityFunctions.R
 
 ## Output 
 <details>
