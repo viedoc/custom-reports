@@ -242,19 +242,7 @@ reportOutput <- list(
 ## Packages
 The R script for a custom report is run in a managed environment which may be different to your development environment. It is important to therefore be aware of what R packages (and their versions) the script can access. At the time of writing, the deployed R version is 4.04.
 
-In order to confirm the package versions used on your system and on in the Viedoc runtime environment, use the following script.
-
-```R
-packagesInstalled <- installed.packages()
-
-packageVersions <- data.frame(
-  Package = packagesInstalled[,"Package"],
-  Version = packagesInstalled[,"Version"],
-  stringsAsFactors = FALSE
-  )
-
-reportOutput <- list("Packages" = list("data" = packageVersions))
-```
+In order to confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).
 
 
 ## Utility functions
