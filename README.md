@@ -26,10 +26,10 @@ This repository aims to provide a how-to guide for creating custom reports for u
   - [Graphing demos](./graphing-demos/README.md): basic examples of how to achieve certain layouts to be used as a guide when developing custom reports 
 
 ## Changelog
-2025-02: initial transfer of documentation and code from eLearning platform to GitHub with minor updates.
+2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
 
 ## Roadmap
-- add information about testing
+- add information about report testing
 - update/refine documentation regarding utility functions
 - add troubleshooting guide
 - add functional report regarding
