@@ -1,11 +1,10 @@
 # Example reports 
 [return to root README](../README.md)
 
-> The example 'use case' reports have been developed for the [Phase II study design template](./StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Some 
-reports depend on a more specialised design, which will be included in the folder. These examples also demonstrate testing and QC of custom reports, using test cases.
+> The example 'use case' reports have been developed for the [Phase II study design template](./StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Some reports depend on a more specialised design, which will be included in the folder. These examples also demonstrate to a variable degree testing and QC of custom reports.
+
 
 ## Contents:
-
 - [Ongoing Adverse Events](./ongoing-AEs/ongoingAEs.R): how to select data that fulfills certain criteria (adverse events that were recorded as ongoing) and data sorting.
 - [Treatment-related Severe Adverse Events](./treatment-related-SAEs/treatmentRelatedSAEs.R): how to select data that fulfills certain criteria (adverse events that were recorded as (possibly) treatment-related and serious) and summarising the data by site.
 - [Serious Adverse Events by demographics](./demographics-SAEs/saeDemographics.R): select data that fulfills certain criteria (adverse events that were recorded as serious) and how to combine this with data from a different form (in this case, a few data points from the Demographics form).
@@ -13,7 +12,8 @@ reports depend on a more specialised design, which will be included in the folde
 - [Drug Accountability](./drug-accountability/drugAccountability.R): monitoring of kit allocation and returns
 - [Medication Inconsistency](./medication-inconsistency/medicationInconsistency.R): relationship between concomitant medication forms and adverse event forms
 - [Outliers](/outliers/outliers.R): how to identify statistical outliers in the data
-- [Survival Curve](.survival-curve/survivalCurvePlotKaplanMeier.R): how to perform a survival analysis using the Survival package, and a more complicated plot using the plotly package.
+- [Survival Curve](./survival-curve/survivalCurvePlotKaplanMeier.R): how to perform a survival analysis using the Survival package, and a more complicated plot using the plotly package.
+- [SAE gauge plot](./SAE-guage-plot/SAE%20gauge%20plot.R) (unvalidated): example of a gauge plot
 
 ## To use:
 1. In Viedoc Admin, create a new study. Assign a designer and allow Reports in Design Settings.
