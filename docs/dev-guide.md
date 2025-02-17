@@ -4,7 +4,7 @@
 While developing, the rds files represent data available in the Viedoc Reports environment.
 
 ### edcData.rds
-This variable is a list that contains the CRF data and operational data. This is unique to the study 
+This variable is a list that contains the CRF data and operational data such as queries and medical coding. Note that only a sample is provided, but the subtables contained will be unique to the study.
 - edcData\$Forms\$[form id] will be a data.frame that contains the CRF data of that particular form. eg. edcData$Forms$DM will have the data from Demographics form
 - edcData\$[operational data name] will be data.frames that contain operational data. 
 
@@ -88,7 +88,7 @@ This variable is a list that contains the CRF data and operational data. This is
 </details>
 
 ### params.rds
-This variable is a list that contains the below listed study and user parameters
+The paramaters refer to data from Viedoc Administrator, including study, site and user information
 
 <details><summary> study and user parameters variables </summary>
 
@@ -108,7 +108,7 @@ This variable is a list that contains the below listed study and user parameters
 </details>
 
 ### metadata.rds
-This variable is a list that contains the ODM elements information.
+The metadata refers to information from Viedoc Designer and is linked to the design version.
 
 <details><summary> metadata variables </summary>
 

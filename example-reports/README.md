@@ -3,6 +3,7 @@
 
 > The example 'use case' reports have been developed for the [Phase II study design template](./StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Some reports depend on a more specialised design, which will be included in the folder. These examples also demonstrate to a variable degree testing and QC of custom reports.
 
+One of the best features of Reports is the ability to combine data from multiple forms.
 
 ## Contents:
 - [Ongoing Adverse Events](./ongoing-AEs/ongoingAEs.R): how to select data that fulfills certain criteria (adverse events that were recorded as ongoing) and data sorting.

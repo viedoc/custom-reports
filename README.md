@@ -2,8 +2,15 @@
 
 ## What are Viedoc Reports and Viedoc Custom Reports
 Viedoc Reports is an integrated Viedoc application for viewing and analysing study progress and performance, allowing data to be browsed and visualised in reports and graphs.
-While most use-cases are covered by the provided reports, custom reports can be developed.
-These reports are configured as a single R script, which is run on-demand to ensure up-to-date visualisations.
+
+![Reports](./docs/assets/reports.png)
+A number of dashboards and overviews can be configured in designer, and  a number of additional information regarding typical use-cases are covered in the 'Reports' section. 
+
+![ReportsReports](./docs/assets/reports2.png)
+
+However, if a bespoke visualisation is desired, custom reports can be developed.These reports are configured as a single R script, which is run on-demand to ensure up-to-date visualisations.
+
+
 
 ## Purpose and scope
 This repository aims to provide a how-to guide for creating custom reports for use in Viedoc Reports, as well as version-controlled public storage of example report scripts.
