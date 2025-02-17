@@ -5,4 +5,4 @@ This report displays all the serious adverse events (SAEs) with the correspondin
 This custom report generates the following output:
 - A table of AEs entered as Serious, combined with the subject's sex and age from the demographic form.
 
-![sae_demographics_output_table](https://github.com/viedoc/custom-reports/assets\sae_with_demographics2.png?raw=true)
+![sae_demographics_output_table](/docs/assets/sae_with_demographics2.png?raw=true)

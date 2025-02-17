@@ -8,4 +8,4 @@ This custom report generates the following output:
 
 - Sub-report 'AEs where meds were prescribed not linked to CMs': A table showing adverse events entries for which it was reported that treatments or medications were prescribed, but for which no concomitant medications entry exists.
 
-![rx_inconsistancy_output_table](https://github.com/viedoc/custom-reports/assets/medication_inconsistency2.png?raw=true)
+![rx_inconsistancy_output_table](/docs/assets/medication_inconsistency2.png?raw=true)

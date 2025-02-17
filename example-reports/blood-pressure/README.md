@@ -8,4 +8,4 @@ This custom report generates the following output:
 - Sub-report 'Systolic only': A plot of the systolic blood pressure.
 - Sub-report 'Diastolic only': A plot of the diastolic blood pressure.
 
-![bp_output](https://github.com/viedoc/custom-reports/assets/bloodpressure_plot2.png?raw=true)
+![bp_output](/docs/assets/bloodpressure_plot2.png?raw=true)

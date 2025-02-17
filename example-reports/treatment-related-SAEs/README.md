@@ -6,4 +6,4 @@ This custom report generates the following output:
 - Sub-report 'by Subject': A table of all AEs entered as possibly related to the study treatment and as Serious.
 - Sub-report 'by Site': A table of the number of AEs fulfilling the above criteria per site.
 
-![treatment_related_output_table](https://github.com/viedoc/custom-reports/assets/treatment_related_saes2.png?raw=true)
+![treatment_related_output_table](/docs/assets/treatment_related_saes2.png?raw=true)

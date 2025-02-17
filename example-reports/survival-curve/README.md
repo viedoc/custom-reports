@@ -6,4 +6,4 @@ This custom report generates the following output:
 
 - Sub-report 'Survival Table': A table with the plotted values.
 
-![survival_curve_output](https://github.com/viedoc/custom-reports/assets/survival_curve2.png?raw=true)
+![survival_curve_output](/docs/assets/survival_curve2.png?raw=true)

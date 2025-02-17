@@ -7,4 +7,4 @@ This custom report generates the following output:
 - A table of allocated and returned kits with the expected and the actual returned numbers of tablets.
 
 
-![rx_accountability_output_table](https://github.com/viedoc/custom-reports/assets/drug_accountibility2.png?raw=true)
+![rx_accountability_output_table](/docs/assets/drug_accountibility2.png?raw=true)
