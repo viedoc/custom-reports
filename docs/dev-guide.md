@@ -197,7 +197,7 @@ reportOutput <- list("by Country" = list("data" = data.frame(), header =newHeade
 Two levels of header can be set for a table as given below:
 ```R
  twoLevelHeader <- list(
-   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6, "Column 7", rep("Covers Columns 8, 9", 2)),
+   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6", "Column 7", rep("Covers Columns 8, 9", 2)),
    secondLevel = c("Column 3", "Column 4", "Column 5", "Column 8", "Column 9")
  )
  reportOutput <- list("by Country" = list("data" = data.frame(), header = twoLevelHeader))
