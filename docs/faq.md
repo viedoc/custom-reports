@@ -28,8 +28,6 @@ Please exercise caution to avoid below scenarios in your code:
 - ensure you have data populated for the tables you are using as inputs.
 - ensure your Reports data is up-to-date with the EDC data (data will not automatically sync in training studies.)
 - when merging, confirm column data types are as expected.
-
-
 - 'no applicable method for [...] applied to an object of class "NULL"'. 
   - Possible cause: The input form requested contains no data or does not exist.
   - Debug step 1: upload an R script containing just the data sources that you use

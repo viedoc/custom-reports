@@ -5,6 +5,7 @@ While developing, the rds files represent data available in the Viedoc Reports e
 
 ### edcData.rds
 This variable is a list that contains the CRF data and operational data such as queries and medical coding. Note that only a sample is provided, but the subtables contained will be unique to the study.
+
 - edcData\$Forms\$[form id] will be a data.frame that contains the CRF data of that particular form. eg. edcData$Forms$DM will have the data from Demographics form
 - edcData\$[operational data name] will be data.frames that contain operational data. 
 
@@ -87,8 +88,8 @@ This variable is a list that contains the CRF data and operational data such as 
   
 </details>
 
-### params.rds
-The paramaters refer to data from Viedoc Administrator, including study, site and user information
+### params.rds  
+The params refer to data from Viedoc Administrator, including study, site and user information
 
 <details><summary> study and user parameters variables </summary>
 
@@ -107,7 +108,7 @@ The paramaters refer to data from Viedoc Administrator, including study, site an
   
 </details>
 
-### metadata.rds
+### metadata.rds  
 The metadata refers to information from Viedoc Designer and is linked to the design version.
 
 <details><summary> metadata variables </summary>
@@ -197,7 +198,7 @@ reportOutput <- list("by Country" = list("data" = data.frame(), header =newHeade
 Two levels of header can be set for a table as given below:
 ```R
  twoLevelHeader <- list(
-   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6, "Column 7", rep("Covers Columns 8, 9", 2)),
+   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6", "Column 7", rep("Covers Columns 8, 9", 2)),
    secondLevel = c("Column 3", "Column 4", "Column 5", "Column 8", "Column 9")
  )
  reportOutput <- list("by Country" = list("data" = data.frame(), header = twoLevelHeader))
@@ -243,7 +244,6 @@ reportOutput <- list(
 The R script for a custom report is run in a managed environment which may be different to your development environment. It is important to therefore be aware of what R packages (and their versions) the script can access. At the time of writing, the deployed R version is 4.04.
 
 In order to confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).
-
 
 ## Utility functions
 The following custom Viedoc utility functions have been loaded into the runtime environment in Viedoc Reports to assist with data wrangling and presentation.

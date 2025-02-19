@@ -10,8 +10,6 @@ A number of dashboards and overviews can be configured in designer, and  a numbe
 
 However, if a bespoke visualisation is desired, custom reports can be developed.These reports are configured as a single R script, which is run on-demand to ensure up-to-date visualisations.
 
-
-
 ## Purpose and scope
 This repository aims to provide a how-to guide for creating custom reports for use in Viedoc Reports, as well as version-controlled public storage of example report scripts.
 
