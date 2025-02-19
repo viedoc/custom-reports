@@ -22,8 +22,9 @@ This repository aims to provide a how-to guide for creating custom reports for u
   - [Developing a custom report](./docs/dev-guide.md)
     - Details about input data available
     - Defining the output object
+    - Utility functions
   - [Additional information](./docs/quick-start.md)
-    - actions to avoid
+    - Actions to avoid
     - Trouble shooting & common errors
 - examples & use cases
   - [Example reports](./example-reports/README.md): reports which have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Includes instructions
