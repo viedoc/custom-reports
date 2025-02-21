@@ -1,7 +1,10 @@
 # Development guide
 [return to root README](../README.md)
+
+This, combined with the [quick-start guide](./quick-start.md), contains information previously found in the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports".
+
 ## Available Data/Valid inputs
-While developing, the rds files represent data available in the Viedoc Reports environment.
+While developing, the edcData an, params and metadata .rds files represent data available in the Viedoc Reports environment.
 
 ### edcData.rds
 This variable is a list that contains the CRF data and operational data such as queries and medical coding. Note that only a sample is provided, but the subtables contained will be unique to the study.
