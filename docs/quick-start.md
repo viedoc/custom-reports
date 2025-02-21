@@ -87,3 +87,8 @@ The script can then be developed as per the guidelines provided in the [dev guid
 ## Uploading the script
 After developing the script, the R file must be uploaded in the study's Global design settings of Viedoc Designer. For more information, see [Configuring Viedoc Reports](https://help.viedoc.net/c/e311e6/326d81/en/). The custom report is then visible for users with permissions to see it in Viedoc Reports.
 
+## Data availability and syncing
+
+The ProcessedQueries dataset will be updated to include the new columns only when there is a new sync with the EDC. For production studies this happens automatically every day, as long as there has been a data change. For training studies, and for production studies without data modification in the past 24 hours, there will be no automatic data sync. As soon as the data is synced after the release, the new columns in the ProcessedQueries dataset are populated correctly and the standard reports using data will also display correctly.
+
+Until the data has synced, the new Queries reports, and other reports that use data from the ProcessedQueries dataset, such as Missing Data, Form Status, PMS, and KRI will result in error/incorrect data. This is because they use the old ProcessedQueries data from Viedoc 4.79 and earlier, which would not have the required columns/column values for populating all reports.
