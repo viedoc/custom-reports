@@ -1,5 +1,15 @@
 # Custom Reports for Viedoc Reports
 
+## Contents:
+- [Purpose and scope](#purpose-and-scope)
+- [What are Viedoc Reports and Viedoc Custom Reports](#what-are-viedoc-reports-and-viedoc-custom-reports)
+- [Overview of the repository contents](#overview-of-the-repository)
+- [Changelog](#changelog)
+- [Roadmap](#roadmap)
+
+## Purpose and scope
+This repository aims to provide a how-to guide for creating custom reports for use in Viedoc Reports. We also provide example report scripts and aim to provide tools for assisting with report development..
+
 ## What are Viedoc Reports and Viedoc Custom Reports
 Viedoc Reports is an integrated Viedoc application for viewing and analysing study progress and performance, allowing data to be browsed and visualised in reports and graphs.
 
@@ -9,9 +19,6 @@ A number of dashboards and overviews can be configured in designer, and  a numbe
 ![ReportsReports](./docs/assets/reports2.png)
 
 However, if a bespoke visualisation is desired, custom reports can be developed.These reports are configured as a single R script, which is run on-demand to ensure up-to-date visualisations.
-
-## Purpose and scope
-This repository aims to provide a how-to guide for creating custom reports for use in Viedoc Reports, as well as version-controlled public storage of example report scripts.
 
 ## Overview of the repository
 - documentation: This folder contains information and resources previously contained on the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports".
@@ -32,6 +39,7 @@ This repository aims to provide a how-to guide for creating custom reports for u
   - [Functional reports](./functional-reports/README.md): reports which  can be added to any study without modification for additional monitoring functionality
   - [Graphing demos](./graphing-demos/README.md): basic examples of how to achieve certain layouts to be used as a guide when developing custom reports 
 - utils: this folder contains additional tools that help in the report development and debugging process. Note that documentation for these functions is included in the [Dev guide](./docs/dev-guide.md)
+
 
 ## Changelog
 2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
