@@ -136,9 +136,32 @@ The metadata refers to information from Viedoc Designer and is linked to the des
 ## Output Object
 
 `reportOutput` - This variable should contain the final output that needs to bedisplayed in the screen
-This variable is a list. There should be one or more entry inthe list.
-Each entry will be made available via a drop-down menu (Similarto "by Country", "by Site', "by Subject" drop-down in theEnrollment Status report)
+This variable is a list. There should be one or more entry in the list.
+Each entry is a 'sub-report' output, made available via a drop-down menu (Similarto "by Country", "by Site', "by Subject" drop-down in theEnrollment Status report).
 
+### Each sub-report item in the reportOutput list is another list:  
+Each subreport item is a named list, where the name is the display name of the subreport, and the list contains the object to be displayed as the first item.
+- if the object is a table, it must be a data.frame() object labelled "data".
+- if the object is a graph, it must be a plot_ly() object labelled "plot".
+The pseudocode below gives an idea of the structure and the data types required, and additional information regarding the optional parameters is provided in the examples.
+
+```
+reportOutput <- list(
+"subreport1Name" = list(
+    EITHER: "data"=data.frame()
+    OR:     "plot=plot_ly(),
+    OPTIONAL: footer=list(text = "", displayOnly=FALSE),  
+    OPTIONAL: header=list(
+                          firstLevel = c('col1-3', 'col1-3', 'col1-3', 'col4'),
+                          secondLevel = c('col1', 'col2', 'col3', 'col4'))
+    OPTIONAL: columnDefs=getColumnDefs() # see util function below
+  ),
+"subreport2Name" ...
+)
+
+```
+
+### Examples
 An example of a single output: 
   
 ```R 
