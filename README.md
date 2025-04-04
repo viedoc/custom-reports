@@ -1,7 +1,7 @@
 # Custom Reports for Viedoc Reports
 
 > [!IMPORTANT]
-> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev-guide.md#packages)
+> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev-guide.md#environment)
 
 ## Contents:
 - [Purpose and scope](#purpose-and-scope)
@@ -33,7 +33,7 @@ However, if a bespoke visualisation is desired, custom reports can be developed.
   - [Developing a custom report](./docs/dev-guide.md)
     - Details about input data available
     - Defining the output object
-    - Utility functions
+    - Environment (supported packages, blocked functions, and added functions)
   - [Additional information](./docs/quick-start.md)
     - Actions to avoid
     - Trouble shooting & common errors
