@@ -353,7 +353,7 @@ In order to confirm the package versions used on your system and on in the Viedo
 > - getFromNamespac <br>
 </details>
 
-## Utility functions
+### Utility functions
 The following custom Viedoc utility functions have been loaded into the runtime environment in Viedoc Reports to assist with data wrangling and presentation.
 
 <details><summary>isValid(x) </summary>  
