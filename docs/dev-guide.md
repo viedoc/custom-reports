@@ -338,7 +338,7 @@ In order to confirm the package versions used on your system and on in the Viedo
 </details>
 
 > [!IMPORTANT]  
-> <details><summary> Currently blocked (Viedoc 4.84), but will be unblocked in 4.55 release</summary>  
+> <details><summary> Currently blocked (Viedoc 4.84), but will be unblocked in 4.85 release</summary>  
 > - run  <br>
 > - process$new  <br>
 > - get  <br>
