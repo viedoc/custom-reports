@@ -318,7 +318,7 @@ In order to confirm the package versions used on your system and on in the Viedo
 </details>  
 
 > [!IMPORTANT]  
-> <details><summary> Newly blocked (Viedoc 4.85)</summary>  
+> <details><summary> Newly blocked (Viedoc 4.84)</summary>  
 > - source  <br>
 > - readLine  <br>
 > - scan  <br>
@@ -338,7 +338,7 @@ In order to confirm the package versions used on your system and on in the Viedo
 </details>
 
 > [!IMPORTANT]  
-> <details><summary> Currently blocked (Viedoc 4.85), but will be unblocked in 4.56 release</summary>  
+> <details><summary> Currently blocked (Viedoc 4.84), but will be unblocked in 4.55 release</summary>  
 > - run  <br>
 > - process$new  <br>
 > - get  <br>
