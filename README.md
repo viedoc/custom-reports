@@ -1,5 +1,8 @@
 # Custom Reports for Viedoc Reports
 
+> [!IMPORTANT]
+> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev-guide.md#environment)
+
 ## Contents:
 - [Purpose and scope](#purpose-and-scope)
 - [What are Viedoc Reports and Viedoc Custom Reports](#what-are-viedoc-reports-and-viedoc-custom-reports)
@@ -30,7 +33,7 @@ However, if a bespoke visualisation is desired, custom reports can be developed.
   - [Developing a custom report](./docs/dev-guide.md)
     - Details about input data available
     - Defining the output object
-    - Utility functions
+    - Environment (supported packages, blocked functions, and added functions)
   - [Additional information](./docs/quick-start.md)
     - Actions to avoid
     - Trouble shooting & common errors
@@ -43,6 +46,7 @@ However, if a bespoke visualisation is desired, custom reports can be developed.
 
 ## Changelog
 2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
+2025-04-04: Updated list specifiying supported packages
 
 ## Roadmap
 - add information about report testing
