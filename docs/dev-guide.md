@@ -300,21 +300,21 @@ In order to confirm the package versions used on your system and on in the Viedo
 
 ### Blocked functions
 <details><summary>  Functions that have never been permitted :</summary>
-- system
-- system2
-- dir.create
-- library
-- require
-- Sys.sleep
-- unlink
-- file.remove
-- file.rename
-- tempdir
-- detach
-- file.copy
-- file.create
-- file.append
-- setwd
+- system <br>
+- system2 <br>
+- dir.create <br>
+- library <br>
+- require <br>
+- Sys.sleep <br>
+- unlink <br>
+- file.remove <br>
+- file.rename <br>
+- tempdir <br>
+- detach <br>
+- file.copy <br>
+- file.create <br>
+- file.append <br>
+- setwd <br>
 </details>  
 
 > [!IMPORTANT]  
