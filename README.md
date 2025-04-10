@@ -11,30 +11,15 @@
 - [Roadmap](#roadmap)
 
 ## Purpose and scope
-This repository aims to provide a how-to guide for creating custom reports for use in Viedoc Reports. We also provide example report scripts and aim to provide tools for assisting with report development..
-
-## What are Viedoc Reports and Viedoc Custom Reports
-Viedoc Reports is an integrated Viedoc application for viewing and analysing study progress and performance, allowing data to be browsed and visualised in reports and graphs.
-
-![Reports](./docs/assets/reports.png)
-A number of dashboards and overviews can be configured in designer, and  a number of additional information regarding typical use-cases are covered in the 'Reports' section. 
-
-![ReportsReports](./docs/assets/reports2.png)
-
-However, if a bespoke visualisation is desired, custom reports can be developed.These reports are configured as a single R script, which is run on-demand to ensure up-to-date visualisations.
+This repository aims to provide a development guide and additional support for creating custom reports for use in Viedoc Reports. This includes example report scripts, some troubleshooting guides, and tools for assisting with report development.
+Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
 
 ## Overview of the repository
 - documentation: This folder contains information and resources previously contained on the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports".
-  - [quick-start guide](./docs/quick-start.md): 
-    - downloading demo data
     - setting up the local environment 
-    - publishing reports
-    - data availability and syncing
-  - [Developing a custom report](./docs/dev-guide.md)
     - Details about input data available
     - Defining the output object
     - Environment (supported packages, blocked functions, and added functions)
-  - [Additional information](./docs/quick-start.md)
     - Actions to avoid
     - Trouble shooting & common errors
 - examples & use cases:
@@ -52,4 +37,3 @@ However, if a bespoke visualisation is desired, custom reports can be developed.
 - add information about report testing
 - update/refine documentation regarding utility functions
 - add troubleshooting guide
-- add functional report regarding
