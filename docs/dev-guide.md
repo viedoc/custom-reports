@@ -91,10 +91,9 @@ This variable is a list that contains the CRF data and operational data such as 
   
 </details>
 
-### params.rds  
-The params refer to data from Viedoc Administrator, including study, site and user information
+<details><summary><h3> params.rds  </h3></summary>
 
-<details><summary> study and user parameters variables </summary>
+The params refer to data from Viedoc Administrator, including study, site and user information
 
 - params$dateOfDownload - Contains date and time at which the data waspulled from Viedoc Clinic.
 - params$UserDetails\$studyinfo: Contains the studyName and studyType
@@ -111,34 +110,56 @@ The params refer to data from Viedoc Administrator, including study, site and us
   
 </details>
 
-### metadata.rds  
+<details><summary><h3>  metadata.rds <h3/></summary>
 The metadata refers to information from Viedoc Designer and is linked to the design version.
 
-<details><summary> metadata variables </summary>
-
 - metadata$MDVOIDs: Contains the design versions applied in the study.
-- metadat$GlobalVariables: A data.frame that has the information onStudyName, StudyDescription and ProtocolName.
-- metadata$BasicDefinitions: A data.frame that has information on any definitions used in the study(Columns: Definition, OID and Name).
-- metadata$StudyEventRef: Contains the order of a Study Event present across the design versions(Data.frame with columns MDVOID,StudyEventOID, OrderNumber and Mandatory).
-- metadata$StudyEventDef: Contains Study Event Definitions applied across the design versions(Data.frame with columns MDVOID, OID,Name, Repeating, Type and Category).
-- metadata$FormRef: Contains details on the Forms added in an Event across the design versions(Data.frame with columns MDVOID,StudyEventOID and FormOID).
-- metadata$FormDef: Contains Form Definitions applied across the design versions of a study (Data.frame with columns MDVOID, OID,Name, Repeating, Sdv and Hidden).
-- metadata$ItemGroupRef: Contains details of the ItemGroups inside a form across design versions(Data.frame with columns MDVOID,FormOID and ItemGroupOID).
-- metadata$ItemGroupDef: Contains details of ItemGroup definitions applied across design versions(Data.frame with columns MDVOID, OID,Name, Repeating, IsReferenceData, SASDatasetName, Domain, Origin,Purpose and Comment).
-- metadata$ItemRef: Contains details of the Items within anItemGroup(Data.frame with columns MDVOID, ItemGroupOID and ItemOID).
-- metadata$ItemDef: Contains the Item definitions applied across design versions(Data.frame with columns MDVOID, OID, Name, DataType,Length, SignificantDigits, SASFieldName, SDSVarName, Origin,Comment, Question, MeasurementUnitOID, CodeListOID, HtmlType and Sdv).
-- metadata$CodeList: Contains the CodeList information as a dataframe with columns MDVOID, OID, Name, DataType, SASFormatName,CodeListType, CodedValue, DecodedValue, Rank and OrderNumber.
-- metadata$RolesDef: Contains the Roles defined in the study acrossdesign versions and their permissions(Data.frame with columnsMDVOID, OID, Name and Permissions).
-- metadata$SDVSettings: Contains details about the SDVScope setacross design versions as a data.frame with columns MDVOID andSDVScope.
-- metadata$formitems: Contains summarized information of Form andItem information(Data.frame with columns OID, FormOID, FormName,Hidden, ItemGroupOID, ItemOID, Name, DataType, Length,SignificantDigits, SASFieldName, SDSVarName, Origin, Comment,Question, MeasurementUnitOID, CodeListOID, HtmlType and Sdv).
+- metadat$GlobalVariables: A data.frame that has the information onStudyName, StudyDescription and ProtocolName.  
+- metadata$BasicDefinitions: A data.frame that has information on any definitions used in the study(Columns: Definition, OID and Name).  
+- metadata$StudyEventRef: Contains the order of a Study Event present across the design versions(Data.frame with columns MDVOID,StudyEventOID, OrderNumber and Mandatory).  
+- metadata$StudyEventDef: Contains Study Event Definitions applied across the design versions(Data.frame with columns MDVOID, OID,Name, Repeating, Type and Category).  
+- metadata$FormRef: Contains details on the Forms added in an Event across the design versions(Data.frame with columns MDVOID,StudyEventOID and FormOID).  
+- metadata$FormDef: Contains Form Definitions applied across the design versions of a study (Data.frame with columns MDVOID, OID,Name, Repeating, Sdv and Hidden).  
+- metadata$ItemGroupRef: Contains details of the ItemGroups inside a form across design versions(Data.frame with columns MDVOID,FormOID and ItemGroupOID).    
+- metadata$ItemGroupDef: Contains details of ItemGroup definitions applied across design versions(Data.frame with columns MDVOID, OID,Name, Repeating, IsReferenceData, SASDatasetName, Domain, Origin,Purpose and Comment).  
+- metadata$ItemRef: Contains details of the Items within anItemGroup(Data.frame with columns MDVOID, ItemGroupOID and ItemOID).  
+- metadata$ItemDef: Contains the Item definitions applied across design versions(Data.frame with columns MDVOID, OID, Name, DataType,Length, SignificantDigits, SASFieldName, SDSVarName, Origin,Comment, Question, MeasurementUnitOID, CodeListOID, HtmlType and Sdv).  
+- metadata$CodeList: Contains the CodeList information as a dataframe with columns MDVOID, OID, Name, DataType, SASFormatName,CodeListType, CodedValue, DecodedValue, Rank and OrderNumber.  
+- metadata$RolesDef: Contains the Roles defined in the study acrossdesign versions and their permissions(Data.frame with columnsMDVOID, OID, Name and Permissions).  
+- metadata$SDVSettings: Contains details about the SDVScope setacross design versions as a data.frame with columns MDVOID andSDVScope.  
+- metadata$formitems: Contains summarized information of Form andItem information(Data.frame with columns OID, FormOID, FormName,Hidden, ItemGroupOID, ItemOID, Name, DataType, Length,SignificantDigits, SASFieldName, SDSVarName, Origin, Comment,Question, MeasurementUnitOID,  CodeListOID, HtmlType and Sdv).  
 </details>
 
 ## Output Object
 
-`reportOutput` - This variable should contain the final output that needs to bedisplayed in the screen
-This variable is a list. There should be one or more entry inthe list.
-Each entry will be made available via a drop-down menu (Similarto "by Country", "by Site', "by Subject" drop-down in theEnrollment Status report)
+`reportOutput` - This variable should contain the final output that needs to bedisplayed in the screen.  It is a list of lists
+This variable is a list. There should be one or more entry in the list.  
+Each entry is a 'sub-report' output, made available via a drop-down menu (Similar to "by Country", "by Site', "by Subject" drop-down in theEnrollment Status report).  
 
+<details><summary><h3>  The sub-report  <h3/></summary>
+Each subreport item is a named list, where the name is the display name of the subreport, and the list contains the object to be displayed as the first item.  
+- if the object is a table, it must be a data.frame() object labelled "data".  
+- if the object is a graph, it must be a plot_ly() object labelled "plot".  
+The pseudocode below gives an idea of the structure and the data types required, and additional information regarding the optional parameters is provided in the examples.  
+
+```
+reportOutput <- list(
+"subreport1Name" = list(
+    EITHER: "data"=data.frame()
+    OR:     "plot=plot_ly(),
+    OPTIONAL: footer=list(text = "", displayOnly=FALSE),  
+    OPTIONAL: header=list(
+                          firstLevel = c('col1-3', 'col1-3', 'col1-3', 'col4'),
+                          secondLevel = c('col1', 'col2', 'col3', 'col4'))
+    OPTIONAL: columnDefs=getColumnDefs() # see util function below
+  ),
+"subreport2Name" ...
+)
+
+```
+</details>
+
+<details><summary><h3>  Examples  <h3/></summary>
 An example of a single output: 
   
 ```R 
@@ -164,14 +185,20 @@ reportOutput <- list(
                 )
 ```
 
+
+
 > [!NOTE] 
-> The name of the list entry containing the data.frame should be named"data" and the plot should be named "plot", as given in above examples. Custom report supports only plot_ly plots. 
+> The name of the list entry containing the data.frame should be named "data" and the plot should be named "plot", as given in above examples. Custom report supports only plot_ly plots. 
 > Please refer to https://plotly.com/r/reference/ for help on plotly plots.
+
+</details>
+
+### Additional customisation parameters
 
 The following parameters can be passed to the  `reportOutput` variable to improve how the report displays
 
-### Footer
-<details>
+<details><summary><h4> Footer </h4></summary>
+
 A footer to the output table can be included as given in the below example:
 
 ```R 
@@ -189,8 +216,8 @@ If "displayOnly" is not mentioned, by default it is considered to be FALSE
 For a plot output, if "`displayOnly = FALSE`", then please use plotly `bottommargin` (refer the example code below) to sufficiently display the note in the plot
 </details>
 
-### Custom headers
-<details>
+<details><summary><h4> Custom headers </h4></summary>
+
 Normally, the data.frame column labels will be used as table header.However, the column labels can be overridden using the header feature asgiven below:
 
 ```R 
@@ -221,8 +248,7 @@ Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 | Column7 | Colu
 > If the wrong number of names are provided for the header parameter, it will revert to the labels included in the table.
 </details>
 
-### Custom column widths
-<details>
+<details><summary><h3> Custom column widths </h3></summary>
 
 The column width can be defined for all or selected columns as give below:
 
@@ -242,13 +268,92 @@ reportOutput <- list(
 ```
 </details>
 
-
-## Packages
+## Environment
 The R script for a custom report is run in a managed environment which may be different to your development environment. It is important to therefore be aware of what R packages (and their versions) the script can access. At the time of writing, the deployed R version is 4.04.
-
 In order to confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).
 
-## Utility functions
+<details><summary><h3> Supported packages:</h3></summary>  
+- vctrs  <br>
+- R6  <br>
+- generics  <br>
+- glue  <br>
+- lifecycle  <br>
+- magrittr  <br>
+- tibble  <br>
+- ellipsis  <br>
+- pillar  <br>
+- crayon  <br>
+- pkgconfig  <br>
+- tidyselect  <br>
+- purrr  <br>
+- Rcpp  <br>
+- tidyr  <br>
+- dplyr  <br>
+- rlang  <br>
+- lubridate  <br>
+- stringr  <br>
+- stringi  <br>
+- plotly  <br>
+- survival  <br>
+- xml2  <br>
+</details>
+
+### Blocked functions
+<details><summary>  Functions that have never been permitted :</summary>
+- system <br>
+- system2 <br>
+- dir.create <br>
+- library <br>
+- require <br>
+- Sys.sleep <br>
+- unlink <br>
+- file.remove <br>
+- file.rename <br>
+- tempdir <br>
+- detach <br>
+- file.copy <br>
+- file.create <br>
+- file.append <br>
+- setwd <br>
+</details>  
+
+> [!IMPORTANT]  
+> <details><summary> Newly blocked (Viedoc 4.84)</summary>  
+> - source  <br>
+> - readLine  <br>
+> - scan  <br>
+> - readChar  <br>
+> - readBin  <br>
+> - read.table  <br>
+> - read.delim  <br>
+> - read.delim2  <br>
+> - read.csv  <br>
+> - read.csv2  <br>
+> - pipe  <br>
+> - exec  <br>
+> - exec_wait  <br>
+> - exec_background  <br>
+> - exec_internal  <br>
+> - ps  <br>
+</details>
+
+> [!IMPORTANT]  
+> <details><summary> Currently blocked (Viedoc 4.84), but will be unblocked in 4.85 release</summary>  
+> - run  <br>
+> - process$new  <br>
+> - get  <br>
+> - do.call  <br>
+> - eval  <br>
+> - parse  <br>
+> - assign  <br>
+> - match.fun  <br>
+> - call2  <br>
+> - evalq  <br>
+> - with  <br>
+> - getFromNamespac <br>
+</details>
+
+### Utility functions
 The following custom Viedoc utility functions have been loaded into the runtime environment in Viedoc Reports to assist with data wrangling and presentation.
 
 <details><summary>isValid(x) </summary>  
