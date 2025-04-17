@@ -1,10 +1,16 @@
-{
-  UserDetails: {
-    studyinfo: {
-      studyName: "reports_download";
+# params.rds
+## params.UserDetails:   
+###  params.UserDetails.studyinfo
+```JavaScript   
+ {
+      studyName: "my_study";
       studyType: "Training";
     }
-    sites: [
+```   
+
+### params.UserDetails.sites:
+  
+```JavaScript  
       {
         siteNumber: 1,
         siteCode: "1",
@@ -18,14 +24,26 @@
         expectedNumberOfSubjectsEnrolled: "NA",
         maximumNumberOfSubjectsScreened: "NA",
       },
-    ];
-    studysettings: {
+
+```   
+
+### params.UserDetails.studysettings:
+  
+```JavaScript  
+ {
       expectedNumberOfScreenedSubjects: null;
       expectedNumberOfEnrolledSubjects: null;
       expectedDateOfCompleteEnrollment: null;
       totalNumberOfStudySites: 1;
       totalNumberOfUniqueCountries: 1;
     }
-  }
-  dateOfDownload: "2025-03-25 15:51:30";
-}
+
+  
+```   
+
+## params.dateOfDownload:
+>  
+```JavaScript   
+  "2025-03-25 15:51:30"
+
+```   
