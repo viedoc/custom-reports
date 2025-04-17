@@ -32,6 +32,63 @@ Please exercise caution to avoid below scenarios in your code:
   - Possible cause: The input form requested contains no data or does not exist.
   - Debug step 1: upload an R script containing just the data sources that you use
 
+### Errors during development
+<details>
+Error:
+``` R
+Error in library(R6) : 
+  there is no package called 'R6'
+```
+(Likely) cause: 
+You have not installed the packages. Each package must be installed the first time you work in an R environment.
+
+Fix:
+install.packages("R6")
+
+
+``` R
+> In file(filename, "r", encoding = encoding) :
+>   cannot open file 'utilityFunctions.R': No such file or directory
+```
+(Likely) cause:
+The R terminal is not using the correct directory as the 'working directory'
+
+Fix:
+> Ensure that you substitude in the correct path to your R files
+```R
+setwd("C:\\Users\\JackSpratt\\Downloads\\SampleForCustomReports")
+```
+
+Error:
+``` R
+> subscript out of bounds
+```
+(Likely) cause:
+the column or row that you are trying to get doesn't exist. You may be calling the [n+1]th item in a list that is n items long, or using an incorrect column name.
+
+Error:
+```R
+> object of type ‘closure’ is not subsettable
+```
+(Likely) cause:
+You are tryiny to subset or access some elements of a function
+There is likely an unclosed bracket or a missing comma, which is making R interpret an object as a function (which is of datatype 'closure')
+
+
+### Errors in Viedoc Reports (it ran fine locally)
+Error:
+``` R
+> Could not find function "..."
+```
+(Likely) cause:
+You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Dev Guide: Environment ](https://github.com/viedoc/custom-reports/blob/main/docs/dev-guide.md#environment)).
+Alternatively, you may be using a different version of a package that is supported. Upload [this utility script](https://github.com/viedoc/custom-reports/blob/main/utils/version_checker.R) as a Custom Report to see the package versions that are used by Viedoc Reports.
+
+Fix:
+Find an alternative function to achieve the result, if possible
+
+</details>
+
 ## Data availability
 
 As per current data modelling best-practices, Viedoc separates "transactional" (EDC) and analytical ("Reports") data. 

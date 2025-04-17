@@ -5,7 +5,11 @@ This folder contains information and resources previously contained on the  [eLe
 
 > The example 'use case' reports have been developed for the [Phase II study design template](./StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory, or any studies that follow the Clinical Data Acquisition Standards Harmonization (CDASH) standards. Some reports depend on a more specialised design, which will be included in the folder. These examples also demonstrate to a variable degree testing and QC of custom reports. Additional information on the inputs and outputs of each report can be found in the README file in the relevant graph's subdirectory.
 
+> ex
+
 ## Contents:
+- name of plot, forms it depends on, output object
+
 - [Ongoing Adverse Events](./ongoing-AEs/ongoingAEs.R): how to select data that fulfills certain criteria (adverse events that were recorded as ongoing) and data sorting.
 - [Treatment-related Severe Adverse Events](./treatment-related-SAEs/treatmentRelatedSAEs.R): how to select data that fulfills certain criteria (adverse events that were recorded as (possibly) treatment-related and serious) and summarising the data by site.
 - [Serious Adverse Events by demographics](./demographics-SAEs/saeDemographics.R): select data that fulfills certain criteria (adverse events that were recorded as serious) and how to combine this with data from a different form (in this case, a few data points from the Demographics form).
