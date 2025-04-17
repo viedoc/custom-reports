@@ -1,28 +1,53 @@
-{
-  MDVOIDs: "1.0";
-  GlobalVariables: [
+
+## MDVOIDs: 
+  <details><summary>Items  </summary> 
+    
+  ```JavaScript   
+"2.0",
+  ```
+  </details>
+  
+  ## GlobalVariables:   
+  <details><summary>Items  </summary>     
+    
+  ```JavaScript   
     {
       StudyName: "MYSTUDY",
       StudyDescription: "MYSTUDY",
       ProtocolName: "000359",
     },
-  ];
-  BasicDefinitions: [
+```
+</details>
+
+##  BasicDefinitions:   
+ <details><summary>Items  </summary>         
+    
+```JavaScript   
     {
       Definition: "MeasurementUnit",
       OID: "MU_17",
       Name: "mL",
     },
-  ];
-  StudyEventRef: [
+```     
+</details>   
+   
+ ##  StudyEventRef:    
+  <details><summary>Items  </summary>        
+    
+```JavaScript   
     {
       MDVOID: "1.0",
       StudyEventOID: "E00",
       OrderNumber: "0",
       Mandatory: "No",
     },
-  ];
-  StudyEventDef: [
+```
+   </details>    
+   
+## StudyEventDef:    
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "E00",
@@ -31,15 +56,25 @@
       Type: "Scheduled",
       Category: "AddEvent",
     },
-  ];
-  FormRef: [
+```
+</details>
+       
+## FormRef:    
+<details><summary>Items  </summary>      
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       StudyEventOID: "E00",
       FormOID: "IC",
     },
-  ];
-  FormDef: [
+```
+</details>   
+
+## FormDef:   
+<details><summary>Items  </summary>
+  
+  ```JavaScript   
     {
       MDVOID: "1.0",
       OID: "LB_LL_CC",
@@ -48,15 +83,25 @@
       Sdv: "None",
       Hidden: "",
     },
-  ];
-  ItemGroupRef: [
+ ```
+ </details>
+ 
+ ## ItemGroupRef:
+ <details><summary>Items  </summary>
+   
+```JavaScript   
     {
       MDVOID: "1.0",
       FormOID: "LB_LL_CC",
       ItemGroupOID: "LB_LL_CCG22",
     },
-  ];
-  ItemGroupDef: [
+```
+</details>
+
+##  ItemGroupDef:
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "LB_LL_CCG22",
@@ -69,8 +114,13 @@
       Purpose: "",
       Comment: "",
     },
-  ];
-  ItemDef: [
+ ```
+ </details>
+ 
+ ## ItemDef:
+  <details><summary>Items  </summary>
+    
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "CC_LBPERF",
@@ -88,15 +138,25 @@
       HtmlType: "radio",
       Sdv: "Required",
     },
-  ];
-  ItemRef[
+```
+</details>   
+
+## ItemRef  
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       ItemGroupOID: "CCG1",
       ItemOID: "CC_LBPERF",
     }
-  ];
-  CodeList: [
+```
+</details>
+
+## CodeList:
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "CL_VDYN",
@@ -109,8 +169,13 @@
       Rank: "",
       OrderNumber: "",
     },
-  ];
-  RolesDef: [
+```
+</details>
+
+##  RolesDef:
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "R1",
@@ -118,21 +183,36 @@
       Permissions:
         "AddForm,ResetForm,AddPatient,EditForm,ScheduleEvent,EditEventSchedule,SignEvent,SignForm,ExportReport,DeleteSubjects,AnonymizeData,ViewRoles",
     },
-  ];
-  SDVSettings: [
+```
+</details>
+
+## SDVSettings:
+<details><summary>Items  </summary>
+  
+  ```JavaScript   
     {
       MDVOID: "1.0",
       SDVScope: "All",
     },
-  ];
-  ActivityDef: [
+```
+</details>
+
+## ActivityDef:
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       OID: "ACT_E00_START",
       ExcludeDateForm: "true",
     },
-  ];
-  formitems: [
+```
+</details>
+
+## formitems:
+<details><summary>Items  </summary>
+  
+```JavaScript   
     {
       MDVOID: "1.0",
       FormOID: "LB_LL_CC",
@@ -154,5 +234,6 @@
       HtmlType: "NA",
       Sdv: "NA",
     },
-  ];
-}
+```
+</details>
+
