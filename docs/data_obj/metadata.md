@@ -1,6 +1,8 @@
 # metadata.rds  
 ## metadata.MDVOIDs: 
   <details><summary>Items  </summary> 
+
+> a list of design versions applied in the study
     
   ```JavaScript   
 "2.0",
