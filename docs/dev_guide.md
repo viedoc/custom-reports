@@ -36,7 +36,7 @@ reportOutput <- list(
 ```
 </details>
 
-<details><summary><h3>  Examples  <h3/></summary>
+<details><summary><h4>  Examples  <h3/></summary>
 An example of a single output: 
   
 ```R 
@@ -125,7 +125,7 @@ Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 | Column7 | Colu
 > If the wrong number of names are provided for the header parameter, it will revert to the labels included in the table.
 </details>
 
-<details><summary><h3> Custom column widths </h3></summary>
+<details><summary><h4> Custom column widths </h3></summary>
 
 The column width can be defined for all or selected columns as give below:
 
