@@ -2,6 +2,8 @@
 ## edcData.EventDates  
   <details><summary>Items  </summary>   
     
+> Contains one record per visit and its corresponding dates for each subject  
+    
 ```JavaScript   
 {  
   SiteSeq: 1,  
@@ -31,6 +33,8 @@
 
 ## edcData.Items  
   <details><summary>Items  </summary>   
+
+>  Contains one record per item with ID, label,datatype, content length and other details.  
     
 ```JavaScript   
 { 
@@ -49,6 +53,8 @@
 
 ## edcData.CodeLists  
   <details><summary>Items  </summary>      
+
+>  Contains one record per code text with format name, datatype and code value. 
     
 ```JavaScript  
 {  
@@ -61,7 +67,9 @@
   </details>  
 
 ## edcData.Queries
-  <details><summary>Items  </summary>   
+  <details><summary>Items  </summary>       
+    
+> Contains one record per query per status along with its status remarks and dates  
     
 ```JavaScript  
 {  
@@ -106,6 +114,8 @@
 
 ## edcData.ReviewStatus
 <details><summary>Items  </summary>  
+
+> Contains one record per visit and form and has the statuses for DM Review, Clinical Review, Signature, and Lock  
     
 ```JavaScript  
 {  
@@ -145,6 +155,8 @@
 
 ## edcData.SubjectStatus
   <details><summary>Items  </summary>   
+
+> Contains one record per subject along with the screening, enrollment, withdrawal status
     
 ```JavaScript  
 {  
@@ -169,6 +181,8 @@
 
 ## edcData.PendingForms
   <details><summary>Items  </summary>  
+
+> Contains one record per pending form  
     
 ```JavaScript  
 {  
@@ -194,6 +208,8 @@
 
 ## edcData.ProcessedQueries
   <details><summary>Items  </summary>   
+
+> Contains one record per query (processed across the status)  
     
 ```JavaScript  
 {  
@@ -271,6 +287,8 @@
 
 ## edcData.Forms
   <details><summary>Items  </summary> 
+
+> edcData\$Forms\$[form id] will be a data.frame that contains the CRF data of that particular form. eg. edcData$Forms$DM will have the data from Demographics form
   
 ### edcData.Forms.ExFormID
 
@@ -306,6 +324,8 @@
 
 ## edcData.TimeLapse
   <details><summary>Items  </summary>  
+
+> Contains one record per form with lapse days(number of days between the event date and the data entry start date)  
     
 ```JavaScript  
 {
