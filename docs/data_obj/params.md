@@ -1,3 +1,5 @@
+[Return to dev guide](../dev_guide.md)
+
 # params.rds
 ## params.UserDetails:   
 ###  params.UserDetails.studyinfo
