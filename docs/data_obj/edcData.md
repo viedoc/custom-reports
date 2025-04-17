@@ -3,30 +3,29 @@
   <details><summary>Items  </summary>   
     
 ```JavaScript   
-    {  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventId: "E00",  
-      EventName: "Subject Registration",  
-      EventRepeatKey: "1",  
-      EventStatus: "Initiated",  
-      EventInitiatedDate: "2025-03-25 15:45",  
-      EventPlannedDate: "NA",  
-      EventProposedDate: "NA",  
-      EventWindowStartDate: "NA",  
-      EventWindowEndDate: "NA",  
-      InitiatedBy: "Sven Svensson (14389)",  
-      InitiatedDate: "2025-03-25 14:45",  
-      LastEditedBy: "Sven Svensson (14389)",  
-      LastEditedDate: "2025-03-25 14:45",  
-      DesignVersion: "1.0",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }
-    
+{  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  EventId: "E00",  
+  EventName: "Subject Registration",  
+  EventRepeatKey: "1",  
+  EventStatus: "Initiated",  
+  EventInitiatedDate: "2025-03-25 15:45",  
+  EventPlannedDate: "NA",  
+  EventProposedDate: "NA",  
+  EventWindowStartDate: "NA",  
+  EventWindowEndDate: "NA",  
+  InitiatedBy: "Sven Svensson (14389)",  
+  InitiatedDate: "2025-03-25 14:45",  
+  LastEditedBy: "Sven Svensson (14389)",  
+  LastEditedDate: "2025-03-25 14:45",  
+  DesignVersion: "1.0",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+},
 ```  
   </details>  
 
@@ -34,17 +33,17 @@
   <details><summary>Items  </summary>   
     
 ```JavaScript   
-    {  
-      ID: "SiteSeq",  
-      Label: "Site sequence number",  
-      DataType: "integer",  
-      Mandatory: "NA",  
-      Decimals: "NA",  
-      MinLength: "NA",  
-      MaxLength: "NA",  
-      FormatName: "NA",  
-      ContentLength: 1,  
-    }  
+{ 
+  ID: "SiteSeq",  
+  Label: "Site sequence number",  
+  DataType: "integer",  
+  Mandatory: "NA",  
+  Decimals: "NA",  
+  MinLength: "NA",  
+  MaxLength: "NA",  
+  FormatName: "NA",  
+  ContentLength: 1,  
+},
 ```  
   </details>  
 
@@ -52,12 +51,12 @@
   <details><summary>Items  </summary>      
     
 ```JavaScript  
-    {  
-    FormatName: "CL_CPROTVERSF",  
-      DataType: "integer",  
-      CodeValue: "1",  
-      CodeText: "21 Dec 2021 Version 5.0",  
-    }  
+{  
+  FormatName: "CL_CPROTVERSF",  
+  DataType: "integer",  
+  CodeValue: "1",  
+  CodeText: "21 Dec 2021 Version 5.0",  
+},
 ```  
   </details>  
 
@@ -66,106 +65,105 @@
     
 ```JavaScript  
 {  
-      QueryStudySeqNo: 1,  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventSeq: "1",  
-      EventId: "E00",  
-      EventName: "Subject Registration",  
-      EventDate: "2025-03-25",  
-      ActivityId: "START_IC",  
-      ActivityName: "NA",  
-      FormId: "IC",  
-      FormName: "Subject Registration",  
-      FormSeq: "1",  
-      SubjectFormSeq: 1,  
-      OriginSubjectFormSeq: 1,  
-      SourceSubjectFormSeq: "NA",  
-      ItemId: "PRVSCRNO",  
-      ItemName: "Previous screening number",  
-      QueryItemSeqNo: 1,  
-      RaisedOn: "Item",  
-      QueryType: "Validation",  
-      RangeCheckOID: "RC_PRVSCRNO_1_0_1",  
-      QueryText:  
-        "'Previous screening number' is not in the expected format.   Please correct.",
-      QueryState: "Query Raised",  
-      QueryResolution: "NA",  
-      UserName: "System (0)",  
-      DateTime: "2025-03-25 14:45",  
-      UserRole: "NA",  
-      QueryRaisedByRole: "NA",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }
-  ```  
+  QueryStudySeqNo: 1,  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  EventSeq: "1",  
+  EventId: "E00",  
+  EventName: "Subject Registration",  
+  EventDate: "2025-03-25",  
+  ActivityId: "START_IC",  
+  ActivityName: "NA",  
+  FormId: "IC",  
+  FormName: "Subject Registration",  
+  FormSeq: "1",  
+  SubjectFormSeq: 1,  
+  OriginSubjectFormSeq: 1,  
+  SourceSubjectFormSeq: "NA",  
+  ItemId: "PRVSCRNO",  
+  ItemName: "Previous screening number",  
+  QueryItemSeqNo: 1,  
+  RaisedOn: "Item",  
+  QueryType: "Validation",  
+  RangeCheckOID: "RC_PRVSCRNO_1_0_1",  
+  QueryText:  
+    "'Previous screening number' is not in the expected format.   Please correct.",
+  QueryState: "Query Raised",  
+  QueryResolution: "NA",  
+  UserName: "System (0)",  
+  DateTime: "2025-03-25 14:45",  
+  UserRole: "NA",  
+  QueryRaisedByRole: "NA",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+},
+```  
     
   </details>  
 
 ## edcData.ReviewStatus
-  <details><summary>Items  </summary>  
+<details><summary>Items  </summary>  
     
 ```JavaScript  
-    {  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventSeq: "1",  
-      EventId: "E01",  
-      EventName: "V1 Screening",  
-      EventDate: "2025-03-13",  
-      ActivityId: "NA",  
-      ActivityName: "NA",  
-      FormId: "$EVENT",  
-      FormName: "NA",  
-      FormSeq: "NA",  
-      SubjectFormSeq: 0,  
-      OriginSubjectFormSeq: 0,  
-      SourceSubjectFormSeq: "NA",  
-      ReviewedItem: "Event date",  
-      CrBy: "N/A",  
-      CrDate: "N/A",  
-      DmBy: "N/A",  
-      DmDate: "N/A",  
-      SdvBy: "N/A",  
-      SdvDate: "N/A",  
-      SignBy: "N/A",  
-      SignDate: "N/A",  
-      LockBy: "N/A",  
-      LockDate: "N/A",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }  
+{  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  EventSeq: "1",  
+  EventId: "E01",  
+  EventName: "V1 Screening",  
+  EventDate: "2025-03-13",  
+  ActivityId: "NA",  
+  ActivityName: "NA",  
+  FormId: "$EVENT",  
+  FormName: "NA",  
+  FormSeq: "NA",  
+  SubjectFormSeq: 0,  
+  OriginSubjectFormSeq: 0,  
+  SourceSubjectFormSeq: "NA",  
+  ReviewedItem: "Event date",  
+  CrBy: "N/A",  
+  CrDate: "N/A",  
+  DmBy: "N/A",  
+  DmDate: "N/A",  
+  SdvBy: "N/A",  
+  SdvDate: "N/A",  
+  SignBy: "N/A",  
+  SignDate: "N/A",  
+  LockBy: "N/A",  
+  LockDate: "N/A",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+},
 ```  
-  </details>    
+</details>    
 
 ## edcData.SubjectStatus
   <details><summary>Items  </summary>   
     
 ```JavaScript  
-     SubjectStatus: [  
-    {  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      ScreenedState: true,  
-      ScreenedOnDate: "2025-03-13 00:00",  
-      EnrolledState: true,  
-      EnrolledOnDate: "2025-03-25 15:47",  
-      CompletedState: false,  
-      CompletedOnDate: "NA",  
-      WithdrawnState: false,  
-      WithdrawnOnDate: "NA",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }  
+{  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  ScreenedState: true,  
+  ScreenedOnDate: "2025-03-13 00:00",  
+  EnrolledState: true,  
+  EnrolledOnDate: "2025-03-25 15:47",  
+  CompletedState: false,  
+  CompletedOnDate: "NA",  
+  WithdrawnState: false,  
+  WithdrawnOnDate: "NA",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+}, 
 ```    
   </details>  
 
@@ -173,24 +171,24 @@
   <details><summary>Items  </summary>  
     
 ```JavaScript  
-      {  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventSeq: "1",  
-      EventId: "E01",  
-      EventName: "V1 Screening",  
-      EventDate: "2025-03-13",  
-      ActivityId: "SCR_LBASS",  
-      ActivityName: "NA",  
-      FormId: "LB_LL_CC",  
-      FormName: "Clinical Chemistry – Local lab",  
-      PendingSince: "2025-03-25 14:45",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    } 
+{  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  EventSeq: "1",  
+  EventId: "E01",  
+  EventName: "V1 Screening",  
+  EventDate: "2025-03-13",  
+  ActivityId: "SCR_LBASS",  
+  ActivityName: "NA",  
+  FormId: "LB_LL_CC",  
+  FormName: "Clinical Chemistry – Local lab",  
+  PendingSince: "2025-03-25 14:45",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+},
 ```  
   </details>     
 
@@ -198,131 +196,135 @@
   <details><summary>Items  </summary>   
     
 ```JavaScript  
-    {  
-      QueryStudySeqNo: 1,  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventSeq: "1",  
-      EventId: "E00",  
-      EventName: "Subject Registration",  
-      EventDate: "2025-03-25",  
-      ActivityId: "START_IC",  
-      ActivityName: "NA",  
-      FormId: "IC",  
-      FormName: "Subject Registration",  
-      FormSeq: "1",  
-      SubjectFormSeq: 1,  
-      OriginSubjectFormSeq: 1,  
-      SourceSubjectFormSeq: "NA",  
-      ItemId: "PRVSCRNO",  
-      ItemName: "Previous screening number",  
-      QueryItemSeqNo: 1,  
-      RaisedOn: "Item",  
-      QueryType: "Validation",  
-      RangeCheckOID: "RC_PRVSCRNO_1_0_1",  
-      QueryText:  
-        "'Previous screening number' is not in the expected format.   Please correct.",
-      PrequeryText: "NA",  
-      UserName: "System (0)",  
-      QueryResolution: "sdf",  
-      ClosedByDataEdit: "NA",  
-      QueryResolutionHistory: "QueryResolved:Sven Svensson (14389):sdf;   ",
-      QueryStatus: "Query Resolved",  
-      PrequeryPromoted: "NA",  
-      PrequeryPromotedBy: "NA",  
-      PrequeryRaised: "NA",  
-      PrequeryRaisedBy: "NA",  
-      PrequeryRejected: "NA",  
-      PrequeryRejectedBy: "NA",  
-      PrequeryRemoved: "NA",  
-      PrequeryRemovedBy: "NA",  
-      QueryApproved: "NA",  
-      QueryApprovedBy: "NA",  
-      QueryClosed: "NA",  
-      QueryClosedBy: "NA",  
-      QueryRaised: "2025-03-25 14:45",  
-      QueryRaisedBy: "System (0)",  
-      QueryRejected: "NA",  
-      QueryRejectedBy: "NA",  
-      QueryRemoved: "NA",  
-      QueryRemovedBy: "NA",  
-      QueryResolved: "2025-03-25 14:45",  
-      QueryResolvedBy: "Sven Svensson (14389)",  
-      QueryClosed_C: "NA",  
-      OpenQueryAge: "NA",  
-      ResolvedQueryAge: 0,  
-      PrequeryAge: "NA",  
-      TimeToResolution: 0,  
-      TimeToApproval: "NA",  
-      TimeToRelease: "NA",  
-      TimeofQueryCycle: "NA",  
-      TimeToRemoval: "NA",  
-      RaisedMonth: "Mar 2025",  
-      ResolvedMonth: "Mar 2025",  
-      RemovedMonth: "NA",  
-      LatestActionBy: "Sven Svensson (14389)",  
-      LatestActionOn: "2025-03-25 14:45",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }
+{  
+  QueryStudySeqNo: 1,  
+  SiteSeq: 1,  
+  SiteName: "1",  
+  SiteCode: "1",  
+  SubjectSeq: 1,  
+  SubjectId: "SE-1-001",  
+  EventSeq: "1",  
+  EventId: "E00",  
+  EventName: "Subject Registration",  
+  EventDate: "2025-03-25",  
+  ActivityId: "START_IC",  
+  ActivityName: "NA",  
+  FormId: "IC",  
+  FormName: "Subject Registration",  
+  FormSeq: "1",  
+  SubjectFormSeq: 1,  
+  OriginSubjectFormSeq: 1,  
+  SourceSubjectFormSeq: "NA",  
+  ItemId: "PRVSCRNO",  
+  ItemName: "Previous screening number",  
+  QueryItemSeqNo: 1,  
+  RaisedOn: "Item",  
+  QueryType: "Validation",  
+  RangeCheckOID: "RC_PRVSCRNO_1_0_1",  
+  QueryText:  
+  "'Previous screening number' is not in the expected format.   Please   correct.",
+  PrequeryText: "NA",  
+  UserName: "System (0)",  // Username for the person who raised the   query/who left the field blank
+  QueryResolution: "sdf",  
+  ClosedByDataEdit: "NA",  
+  QueryResolutionHistory: "QueryResolved:Sven Svensson (14389):sdf;     ",
+  QueryStatus: "Query Resolved",  
+  PrequeryPromoted: "NA",  
+  PrequeryPromotedBy: "NA",  
+  PrequeryRaised: "NA",  
+  PrequeryRaisedBy: "NA",  
+  PrequeryRejected: "NA",  
+  PrequeryRejectedBy: "NA",  
+  PrequeryRemoved: "NA",  
+  PrequeryRemovedBy: "NA",  
+  QueryApproved: "NA",  
+  QueryApprovedBy: "NA",  
+  QueryClosed: "NA",  
+  QueryClosedBy: "NA",  
+  QueryRaised: "2025-03-25 14:45",  
+  QueryRaisedBy: "System (0)",  
+  QueryRejected: "NA",  
+  QueryRejectedBy: "NA",  
+  QueryRemoved: "NA",  
+  QueryRemovedBy: "NA",  
+  QueryResolved: "2025-03-25 14:45",  
+  QueryResolvedBy: "Sven Svensson (14389)",  
+  QueryClosed_C: "NA",  
+  OpenQueryAge: "NA",  // Difference (in days) between the Query Raised date and current date for query in 'Query Raised' state;
+  ResolvedQueryAge: 0,   // Difference (in days) between the Query Resolved date and current date for query in 'Query Resolved' state
+  PrequeryAge: "NA",  // Difference (in days) between the Prequery Raised date and current date for prequery in 'Prequery Raised' or 'Prequery Promoted' states
+  TimeToResolution: 0,  // Difference (in days) between the Query Raised date and Query Resolved/ Query Closed date
+  TimeToApproval: "NA",  // Difference between the Query Resolved date and Query Approved/ Query Rejected date;
+  TimeToRelease: "NA",  // Difference between the Prequery Raised date and Prequery Rejected/Removed/Released(Query Raised) date
+  TimeofQueryCycle: "NA",  // Difference between the Query Raised date and Query Approved/ Query Rejected/ Query Closed date
+  TimeToRemoval: "NA",  
+  RaisedMonth: "Mar 2025",  
+  ResolvedMonth: "Mar 2025",  
+  RemovedMonth: "NA",  
+  LatestActionBy: "Sven Svensson (14389)",  
+  LatestActionOn: "2025-03-25 14:45",  
+  CountryCode: "SE",  
+  Country: "Sweden",  
+},
 ```  
   </details>     
 
 ## edcData.Forms
   <details><summary>Items  </summary>   
-    
+### edcData.Forms.ExFormID
+
 ```JavaScript  
-    {  
-      SiteSeq: 1,  
-      SiteName: "1",  
-      SiteCode: "1",  
-      SubjectSeq: 1,  
-      SubjectId: "SE-1-001",  
-      EventId: "E00",  
-      EventName: "Subject Registration",  
-      EventRepeatKey: "1",  
-      EventStatus: "Initiated",  
-      EventInitiatedDate: "2025-03-25 15:45",  
-      EventPlannedDate: "NA",  
-      EventProposedDate: "NA",  
-      EventWindowStartDate: "NA",  
-      EventWindowEndDate: "NA",  
-      InitiatedBy: "Sven Svensson (14389)",  
-      InitiatedDate: "2025-03-25 14:45",  
-      LastEditedBy: "Sven Svensson (14389)",  
-      LastEditedDate: "2025-03-25 14:45",  
-      DesignVersion: "1.0",  
-      CountryCode: "SE",  
-      Country: "Sweden",  
-    }  
-```  
+{
+  SiteSeq: 5,
+  SiteName: "checkbox",
+  SiteCode: "CH",
+  SubjectSeq: 1,
+  SubjectId: "SE-CH-001",
+  EventSeq: "1",
+  EventId: "e1",
+  EventName: "event1",
+  EventDate: "2025-04-16",
+  ActivityId: "act2",
+  ActivityName: "act2",
+  FormSeq: "1",
+  SubjectFormSeq: 1,
+  OriginSubjectFormSeq: 1,
+  SourceSubjectFormSeq: "NA",
+  DesignVersion: "11.2",
+  InitiatedBy: "Sylvia Van Belle (30358)",
+  InitiatedDate: "2025-04-16 13:43",
+  LastEditedBy: "Sylvia Van Belle (30358)",
+  LastEditedDate: "2025-04-16 13:43",
+  Item1: "NA",
+  Item11CD: "NA",
+  CountryCode: "SE",
+  Country: "Sweden"
+},
+```
   </details>     
 
 ## edcData.TimeLapse
   <details><summary>Items  </summary>  
     
 ```JavaScript  
-        {
-      SiteCode: "1",  
-      SiteName: "1",  
-      SubjectId: "SE-1-001",  
-      EventId: "E00",  
-      EventName: "Subject Registration",  
-      EventSeq: "1",  
-      ActivityId: "START_IC",  
-      ActivityName: "NA",  
-      FormSeq: "1",  
-      DesignVersion: "1.0",  
-      EventDate: "2025-03-25",  
-      InitiatedDate: "2025-03-25",  
-      FormName: "Subject Registration",  
-      LapseDays: 0,  
-      CountryCode: "SE",  
-      Country: "Sweden"
-      }
+{
+  SiteCode: "1",  
+  SiteName: "1",  
+  SubjectId: "SE-1-001",  
+  EventId: "E00",  
+  EventName: "Subject Registration",  
+  EventSeq: "1",  
+  ActivityId: "START_IC",  
+  ActivityName: "NA",  
+  FormSeq: "1",  
+  DesignVersion: "1.0",  
+  EventDate: "2025-03-25",  
+  InitiatedDate: "2025-03-25",  
+  FormName: "Subject Registration",  
+  LapseDays: 0,  
+  CountryCode: "SE",  
+  Country: "Sweden"
+},
 ```  
   </details>  
   
