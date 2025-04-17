@@ -27,6 +27,7 @@ Details about Viedoc Reports and non-development aspects of custom reports can b
   - [Functional reports](./functional-reports/README.md): reports which  can be added to any study without modification for additional monitoring functionality
   - [Graphing demos](./graphing-demos/README.md): basic examples of how to achieve certain layouts to be used as a guide when developing custom reports 
 - utils: this folder contains additional tools that help in the report development and debugging process. Note that documentation for these functions is included in the [Dev guide](./docs/dev-guide.md)
+- - add brief discription of each util.
 
 
 ## Changelog
