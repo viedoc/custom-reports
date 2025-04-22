@@ -87,6 +87,17 @@ Alternatively, you may be using a different version of a package that is support
 Fix:
 Find an alternative function to achieve the result, if possible
 
+Error:
+```R
+Custom report code uses the forbidden functions (library). Please check and upload the code again.
+```
+(Likely) cause:
+You have forgotten to comment out or delete the development environment setup code.
+
+Fix:
+Ensure any code included to load packages and data is commented out. 
+
+
 </details>
 
 ## Data availability
