@@ -1,7 +1,7 @@
 # Custom Reports for Viedoc Reports
 
 > [!IMPORTANT]
-> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev-guide.md#environment)
+> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev_guide.md#blocked-functions)
 
 ## Contents:
 - [Purpose and scope](#purpose-and-scope)
@@ -11,28 +11,29 @@
 - [Roadmap](#roadmap)
 
 ## Purpose and scope
-This repository aims to provide a development guide and additional support for creating custom reports for use in Viedoc Reports. This includes example report scripts, some troubleshooting guides, and tools for assisting with report development.
+The goal of this repository is to offer further assistance and a development guide for making custom reports that can be used with Viedoc Reports.  This contains tools to help with report development, some troubleshooting advice, and sample report scripts.
 Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
 
 ## Overview of the repository
-- documentation: This folder contains information and resources previously contained on the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports".
-    - setting up the local environment 
+- Documentation: This folder contains information and resources previously contained on the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports". The main information present on this reposiroty is described below.
+    - Setting up the local environment 
     - Details about input data available
     - Defining the output object
     - Environment (supported packages, blocked functions, and added functions)
     - Actions to avoid
     - Trouble shooting & common errors
-- examples & use cases:
+- Examples & use cases:
   - [Example reports](./example-reports/README.md): reports which have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Formerly contained on the  [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Custom reports examples".
   - [Functional reports](./functional-reports/README.md): reports which  can be added to any study without modification for additional monitoring functionality
   - [Graphing demos](./graphing-demos/README.md): basic examples of how to achieve certain layouts to be used as a guide when developing custom reports 
-- utils: this folder contains additional tools that help in the report development and debugging process. Note that documentation for these functions is included in the [Dev guide](./docs/dev-guide.md)
-- - add brief discription of each util.
+- Utils: this folder contains additional tools that help in the report development and debugging process. Note that documentation for these functions is included in the [Dev guide](./docs/dev-guide.md)
 
 
 ## Changelog
-2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
+2025-04-23: Link updates and general rewriting of content
 2025-04-04: Updated list specifiying supported packages
+2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
+
 
 ## Roadmap
 - add information about report testing
