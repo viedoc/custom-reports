@@ -436,6 +436,46 @@ Please exercise caution to avoid below scenarios in your code:
 - Data manipulation that might yield huge incorrect data ending up taking unnecessary disk space
 - Any tampering with the host system properties and performance
 
+## Datatype issues
+### Get value from a dataframe as a string
+ ```R
+item_id <- paste0(df$itemId[1])
+```
+
+## Handling null cases
+Certain functions will raise errors if they receive a null value, rather than a specific object type (see datatype issues above).
+This can happen when a value doesn't exist in a table. In R, empty tables or empty values in a list will be returned as Null, rather than an empty instance of the object.
+
+It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occured,
+edcData$Forms$AE will return null
+
+ ```R
+myFunction <- function(df)
+default_value <- NA_character_
+if (nrow(df) == 0) {
+    return(default_value)
+  }
+```
+
+### Get value based on another column if exists
+
+```R
+first_value <- default_value
+
+if(!is.null(df) && nrow(df) > 0){
+  if (id_value %in% df$id_column){
+    values_where_true <- df %>%
+      filter(id_column == id_value) %>%
+      select(value_column)
+    first_value <- paste0(
+      values_where_true[
+        order(values_where_true$date_column, decreasing = FALSE),
+      ][1]
+    )
+  }
+}
+```
+
 
 ## Troubleshooting
 
