@@ -1,35 +1,3 @@
-# library(vctrs)
-# library(R6)
-# library(generics)
-# library(glue)
-# library(lifecycle)
-# library(magrittr)
-# library(tibble)
-# library(ellipsis)
-# library(pillar)
-# library(crayon)
-# library(pkgconfig)
-# library(tidyselect)
-# library(purrr)
-# library(Rcpp)
-# library(tidyr)
-# library(dplyr)
-# library(rlang)
-# library(lubridate)
-# library(stringr)
-# library(stringi)
-# library(plotly)
-# library(survival)
-# library(xml2)
-# 
-# setwd("C:\\Users\\JackSpratt\\w\\custom-reports\\functional-reports\\active-design-versions-report")
-# 
-# source("utilityFunctions.R", local = T)
-# edcData <- readRDS("edcData.rds")
-# params <- readRDS("params.rds")
-# metadata <- readRDS("metadata.rds")
-
-
 # Creating the nested tibble from the list of forms returned by edcData
 forms_nested <- tibble(FormID=names(edcData$Forms), data = edcData$Forms)
 form_defs <- metadata$FormDef %>%
