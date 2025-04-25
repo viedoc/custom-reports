@@ -14,7 +14,7 @@ This means that you cannot perform lookups beetween them. This script creates a 
 > If there are multiple items with the same output ID, it will select the first field ID sorted by descending design version.
 > There may also be issues when cross referenicng formlink or checkbox items.
 
-## read_from_xlsx_export.R
+## [read_from_xlsx_export.R](./[read_from_xlsx_export.R)
 This code snippet allows for the excel Data Exports from Viedoc Clinic to be read into R to replace the edcData.rds. 
 This could be useful when testing specific a script on a specific dataset.
 
@@ -23,7 +23,7 @@ This could be useful when testing specific a script on a specific dataset.
 > A country column is also available in edcData.rds/Reports, but not the data Export.
 > The first row of the Excel spreadsheets containing field output labels is not imported.
 
-## version_checker.R
+## [version_checker.R](./version_checker.R)
 This script creates a Viedoc Reports table that shows the versions of installed packages in the Viedoc Reports environment, when uploaded as a custom report in Designer.
 If functions seem to be behaving differently in Viedoc Reports compared to your local environment, compare the package versions by running the script locally and viewing the packageVersions table.
 
