@@ -1,4 +1,4 @@
-# Utils
+# Utilities and development tools
 
 ## [utilityFunctions.R](./utilityFunctions.R)
 These are functions available to any script loaded in the Viedoc Reports Server. See [Utility Function Documentation](../docs/dev_guide.md#utility-functions).
