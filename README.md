@@ -15,20 +15,17 @@ This repository aims to provide a development guide and additional support for c
 Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
 
 ## Overview of the repository
-- documentation: This folder contains information and resources previously contained on the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports".
-    - setting up the local environment 
+- [Development Guide](./docs/dev_guide.md): This README contains information and resources on how to develop a custom report, including:
+    - Prerequisits & setup
     - Details about input data available
-    - Defining the output object
-    - Environment (supported packages, blocked functions, and added functions)
-    - Actions to avoid
+    - Available packages and functions in Viedoc reports
+    - Output format
     - Trouble shooting & common errors
 - examples & use cases:
-  - [Example reports](./example-reports/README.md): reports which have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory. Formerly contained on the  [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Custom reports examples".
+  - [Example reports](./example-reports/README.md): source code for the reports showcased in the [eLearning Reports User Guide](https://help.viedoc.net/c/8a3600/9fc73b/en/). These have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml). A range of visualisations are implemented across these reports.
   - [Functional reports](./functional-reports/README.md): reports which  can be added to any study without modification for additional monitoring functionality
   - [Graphing demos](./graphing-demos/README.md): basic examples of how to achieve certain layouts to be used as a guide when developing custom reports 
-- utils: this folder contains additional tools that help in the report development and debugging process. Note that documentation for these functions is included in the [Dev guide](./docs/dev-guide.md)
-- - add brief discription of each util.
-
+- [utils](./utils/README.md): this folder contains additional tools that help in the report development and debugging process.
 
 ## Changelog
 2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
