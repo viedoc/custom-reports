@@ -7,12 +7,12 @@ These functions can be loaded into local workspace using `source("utilityFunctio
 ## [id_ouptut_id_mismatches.R](./id_ouptut_id_mismatches.R)
 The purpose of this code snippet is to resolve issues that are caused when output field IDs are used for form items.  
 These items are represented using the output field ID in edcData, but use the standard field_id/item_id in the metadata.  
-This means that you cannot perform lookups beetween them. This script creates a lookup table between the SAS field name (output field id) and the item ID 
+This means that you cannot perform lookups between them. This script creates a lookup table between the SAS field name (output field id) and the item ID. 
 
 > [!Note]
 > Viedoc Designer does not control for conflicting Output IDs, and this script will likely not handle duplicate output field IDs.
 > If there are multiple items with the same output ID, it will select the first field ID sorted by descending design version.
-> There may also be issues when cross referenicng formlink or checkbox items.
+> There may also be issues when cross referencing formlink or checkbox items.
 
 ## [read_from_xlsx_export.R](./[read_from_xlsx_export.R)
 This code snippet allows for the excel Data Exports from Viedoc Clinic to be read into R to replace the edcData.rds. 
