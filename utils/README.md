@@ -26,13 +26,3 @@ This could be useful when testing specific a script on a specific dataset.
 ## [version_checker.R](./version_checker.R)
 This script creates a Viedoc Reports table that shows the versions of installed packages in the Viedoc Reports environment, when uploaded as a custom report in Designer.
 If functions seem to be behaving differently in Viedoc Reports compared to your local environment, compare the package versions by running the script locally and viewing the packageVersions table.
-
-## Return 'no data' message
-To return a message saying 'no data' rather than raising an error, the following can be implemented:
-
-```R
-if (is.null(df) || nrow(df) < 1){
-    reportOutput <- (list("data" = list("data" = data.frame(NoData = "There is no data available."))))
-  }
-```
-
