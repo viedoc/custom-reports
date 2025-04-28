@@ -429,14 +429,11 @@ reportOutput <- list(
 
 # Gotchas, FAQs and debugging
 
-<details><summary><h2>Actions to avoid </h2></summary>
 Please exercise caution to avoid below scenarios in your code:
 
 - Infinite loops
 - Data manipulation that might yield huge incorrect data ending up taking unnecessary disk space
 - Any tampering with the host system properties and performance
-
-</details>
 
 ## Troubleshooting
 
