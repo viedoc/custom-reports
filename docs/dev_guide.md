@@ -479,11 +479,18 @@ if(!is.null(df) && nrow(df) > 0){
 
 ## Troubleshooting
 
+The main issues with code and how to troubleshoot is to understand what your code is supposed to be doing. The most important factors to start troubleshooting are:
+- What is the goal of the code?
+- What inputs are expected?
+- What outputs should look like?
+
+Below you find some general tips that can help you with your troubleshooting approach.
+
 General tips:
 - Confirm that your functions exist and behave the same way as the version available in the runtime environment
-- Ensure you have data populated for the tables you are using as inputs.
+- Ensure you have data populated for the tables you are using as inputs
 - Ensure your Reports data is up-to-date with the EDC data (data will not automatically sync in training studies.)
-- When merging, confirm column data types are as expected.
+- When merging, confirm column data types are as expected
 
 <details><summary>Common errors </summary>
 
