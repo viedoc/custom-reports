@@ -1,8 +1,5 @@
 # Custom Reports for Viedoc Reports
 
-> [!IMPORTANT]
-> There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev_guide.md#blocked-functions)
-
 ## Purpose and scope
 The goal of this repository is to offer further assistance and a development guide for making custom reports that can be used with Viedoc Reports.  This contains tools to help with report development, some troubleshooting advice, and sample report scripts.
 Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
