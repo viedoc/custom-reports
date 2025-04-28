@@ -408,7 +408,7 @@ A single-level header can include HTML tags.
 > If the wrong number of names are provided for the header parameter, it will revert to the labels included in the table.
 </details>
 
-<details><summary><h4> Custom column widths </h3></summary>
+<details><summary><h4> Custom column widths </h4></summary>
 The column width can be defined for all or selected columns as give below: 
 
 ```R
@@ -429,32 +429,175 @@ reportOutput <- list(
 
 # Gotchas, FAQs and debugging
 
-## Actions to avoid
+<details><summary><h2>Actions to avoid </h2></summary>
 Please exercise caution to avoid below scenarios in your code:
 
 - Infinite loops
 - Data manipulation that might yield huge incorrect data ending up taking unnecessary disk space
 - Any tampering with the host system properties and performance
 
-## Datatype issues
-### Get value from a dataframe as a string
- ```R
-item_id <- paste0(df$itemId[1])
+</details>
+
+## Troubleshooting
+
+When things go wrong, step back and ask:
+- What is the goal of this code?
+- What inputs are expected?
+- What should the outputs look like?
+
+Below you find some general tips that can help you with your troubleshooting approach.
+
+## General tips:
+- Confirm that all required functions and libraries are loaded.
+- Use str(), class(), or typeof() to understand object types.
+- Print intermediate outputs (print() or View()) to verify assumptions.
+- Avoid chaining (%>%) in long steps while debugging; break into chunks.
+- When merging, make sure key columns are the same type in both dataframes.
+
+<details><summary><H2>Common errors during development</H2></summary>
+<details><summary><H3>Error: No Package Found</H3></summary>
+
+``` R
+Error in library(R6) : there is no package called 'R6'
+```
+Cause: 
+You have not installed the packages. Each package must be installed the first time you work in an R environment.
+
+Fix:
+``` R
+install.packages("R6")
 ```
 
-## Handling null cases
-Certain functions will raise errors if they receive a null value, rather than a specific object type (see datatype issues above).
-This can happen when a value doesn't exist in a table. In R, empty tables or empty values in a list will be returned as Null, rather than an empty instance of the object.
+</details>
+<details><summary><H3>Error: Cannot Open File</H3></summary>
 
-It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occured,
-edcData$Forms$AE will return null
+``` R
+> In file(filename, "r", encoding = encoding) :
+>   cannot open file 'utilityFunctions.R': No such file or directory
+```
+(Likely) cause:
+The R terminal is not using the correct directory as the 'working directory'
+
+Fix:
+> Ensure that you substitude in the correct path to your R files
+```R
+setwd("C:\\Users\\JackSpratt\\Downloads\\SampleForCustomReports")
+```
+
+</details>
+<details><summary><H3>Error: subscript out of bounds</H3></summary>
+
+``` R
+> Error in vec[4] : subscript out of bounds
+```
+Explanation: You tried to access the 4th element of a 3-element vector.
+See 
+(Likely) cause:
+The column or row that you are trying to get doesn't exist. You may be calling the [n+1]th item in a list that is n items long, or using an incorrect column name.
+
+
+</details>
+<details><summary><H3>Error: object of type ‘closure’ is not subsettable</H3></summary>
+
+Likely cause:
+Cause: You tried to index a function. Likely due to a typo (e.g., forgot to add parentheses or had a name clash with a function).
+
+</details></details>
+<details><summary><H2>Common errors after publishing (it ran fine locally) </H2></summary>
+<details><summary><H3>Error: Could not find function</H3></summary>
+ 
+Error:
+``` R
+> Could not find function "..."
+```
+(Likely) cause:
+You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Dev Guide: Environment ](https://github.com/viedoc/custom-reports/blob/main/docs/dev-guide.md#environment)).
+Alternatively, you may be using a different version of a package that is supported. Upload [this utility script](https://github.com/viedoc/custom-reports/blob/main/utils/version_checker.R) as a Custom Report to see the package versions that are used by Viedoc Reports.
+
+Fix:
+Find an alternative function to achieve the result, if possible
+
+</details>
+<details><summary><H3>Error: uses the forbidden function</H3></summary>
+ 
+Error:
+```R
+Custom report code uses the forbidden functions (library). Please check and upload the code again.
+```
+(Likely) cause:
+You have forgotten to comment out or delete the development environment setup code.
+
+Fix:
+Ensure any code included to load packages and data is commented out. 
+
+
+</details>
+<details><summary><H3>Error: no applicable method function</H3></summary>
+
+Error:
+``` R
+no applicable method for [...] applied to an object of class "NULL"
+```
+(Possible) cause: 
+The input form requested contains no data or does not exist.
+
+Fix:
+- Ensure there is data for the forms used.
+- Add null checks to your code.
+
+</details>
+</details>
+
+<details><summary><h2>Datatype issues </h2></summary>
+
+### Get value from a dataframe as a string
+R will return a factor or numeric by default, depending on how the dataframe was created. To ensure a string, use paste0() or as.character().
 
  ```R
+
+item_id <- paste0(df$itemId[1])  # Ensures value is string
+# alternatively:
+item_id <- as.character(df$itemId[1])
+
+```
+
+### Convert DataFrame Columns to Specific Types
+Sometimes, especially after reading from CSVs or APIs, the data types may not be what you expect. Use mutate(across(...)) for converting multiple columns:
+```R
+df <- df %>%
+  mutate(across(everything(), as.character))  # or as.numeric, as.factor, etc.
+```
+Use str(df) or glimpse(df) to confirm column types.
+
+</details>
+<details><summary><h2>Handling null cases </h2></summary>
+
+Certain functions will raise errors if they receive a NULL value, instead of an empty dataframe or list. This can often be an issue in Viedoc Reports, but not in your local enviornment.
+
+It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occured,
+edcData$Forms$AE will return null.
+
+The way to fix this issue is to create a default object to return.
+
+### Return NA value if source dataframe is empty
+
+ ```R
+# example 1
 myFunction <- function(df)
 default_value <- NA_character_
 if (nrow(df) == 0) {
     return(default_value)
   }
+```
+
+### Return empty dataframe if source dataframe is null or empty
+
+ ```R
+if(is.null(ae_data) || nrow(ae_data)==0){
+  ae_data <- data.frame(matrix(ncol = 6, nrow = 0)) %>%
+    mutate(across(!item_3, as.character))
+  colnames(ae_data) <- c("SubjectId","SiteName","item_1","item_2","item_3",)
+}
 ```
 
 ### Get value based on another column if exists
@@ -476,100 +619,52 @@ if(!is.null(df) && nrow(df) > 0){
 }
 ```
 
+</details>
+<details><summary><h2>Incorrect Indexing </h2></summary>
 
-## Troubleshooting
+Indexing errors are extremely common in R and often result in confusing or misleading behavior.
+### Subscript Out of Bounds
+This happens when you attempt to access an index that doesn’t exist.
 
-The main issues with code and how to troubleshoot is to understand what your code is supposed to be doing. The most important factors to start troubleshooting are:
-- What is the goal of the code?
-- What inputs are expected?
-- What outputs should look like?
-
-Below you find some general tips that can help you with your troubleshooting approach.
-
-General tips:
-- Confirm that your functions exist and behave the same way as the version available in the runtime environment
-- Ensure you have data populated for the tables you are using as inputs
-- Ensure your Reports data is up-to-date with the EDC data (data will not automatically sync in training studies.)
-- When merging, confirm column data types are as expected
-
-<details><summary>Common errors </summary>
-
-Error:
-``` R
-Error in library(R6) : 
-  there is no package called 'R6'
-```
-(Likely) cause: 
-You have not installed the packages. Each package must be installed the first time you work in an R environment.
-
-Fix:
-install.packages("R6")
-
-
-``` R
-> In file(filename, "r", encoding = encoding) :
->   cannot open file 'utilityFunctions.R': No such file or directory
-```
-(Likely) cause:
-The R terminal is not using the correct directory as the 'working directory'
-
-Fix:
-> Ensure that you substitude in the correct path to your R files
 ```R
-setwd("C:\\Users\\JackSpratt\\Downloads\\SampleForCustomReports")
+vec <- c(1, 2, 3)
+vec[4]  # Error: subscript out of bounds
 ```
-
-Error:
-``` R
-> subscript out of bounds
-```
-(Likely) cause:
-The column or row that you are trying to get doesn't exist. You may be calling the [n+1]th item in a list that is n items long, or using an incorrect column name.
-
-Error:
+Fix:
+Always check the length of your vector or the number of rows/columns:
 ```R
-> object of type ‘closure’ is not subsettable
+if (length(vec) >= 4) {
+  value <- vec[4]
+}
 ```
-(Likely) cause:
-You are tryiny to subset or access some elements of a function
-There is likely an unclosed bracket or a missing comma, which is making R interpret an object as a function (which is of datatype 'closure')
 
+### returning a one-row dataframe instead of a value (or vice versa))
 
-### Errors in Viedoc Reports (it ran fine locally)
-Error:
-``` R
-> Could not find function "..."
-```
-(Likely) cause:
-You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Dev Guide: Environment ](https://github.com/viedoc/custom-reports/blob/main/docs/dev-guide.md#environment)).
-Alternatively, you may be using a different version of a package that is supported. Upload [this utility script](https://github.com/viedoc/custom-reports/blob/main/utils/version_checker.R) as a Custom Report to see the package versions that are used by Viedoc Reports.
+- `[[` extracts a single element as a value
+- `[` returns a subset of the object (e.g., a one-row dataframe)
 
-Fix:
-Find an alternative function to achieve the result, if possible
-
-Error:
 ```R
-Custom report code uses the forbidden functions (library). Please check and upload the code again.
+df[1]       # returns a one-column dataframe
+df[[1]]     # returns the actual values from the first column
 ```
-(Likely) cause:
-You have forgotten to comment out or delete the development environment setup code.
 
-Fix:
-Ensure any code included to load packages and data is commented out. 
+Accessing Non-existent Columns
 
-Error:
-``` R
-no applicable method for [...] applied to an object of class "NULL"
+```R
+df$nonexistent_column  # returns NULL
+df[["nonexistent_column"]]  # returns NULL, but can error in some contexts
 ```
-(Possible) cause: 
-The input form requested contains no data or does not exist.
+Avoid silent errors by validating column names:
 
-Fix:
-- Ensure there is data for the forms used.
-- Add null checks to your code.
+```R
 
+if ("target_column" %in% colnames(df)) {
+  val <- df[["target_column"]]
+}
+```
 
 </details>
+
 
 ## Data availability
 
