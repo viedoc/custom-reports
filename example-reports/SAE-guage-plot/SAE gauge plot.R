@@ -68,11 +68,6 @@ columnz = getColumnDefs(colwidths = widths)
 footr = "NOTE: See plots"
 plfooterText = "NOTE: Delta is from previous seven days."
 
-
-reportOutput = list(
-  "by Subject" = list("data" = saeOut, footer = list(text = footr, displayOnly = TRUE), columnDefs = columnz),
-  "by Site" = list("data" = saeOut2))
-
 # Set the output
 reportOutput <- list(
   "by Subject" = list("data" = saeOut, footer = list(text = footr, displayOnly = TRUE), columnDefs = columnz),

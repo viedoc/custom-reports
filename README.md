@@ -3,13 +3,6 @@
 > [!IMPORTANT]
 > There have been recent changes to the packages/functions for supported within scripts for custom reports. Please review the list, including changes [here](./docs/dev_guide.md#blocked-functions)
 
-## Contents:
-- [Purpose and scope](#purpose-and-scope)
-- [What are Viedoc Reports and Viedoc Custom Reports](#what-are-viedoc-reports-and-viedoc-custom-reports)
-- [Overview of the repository contents](#overview-of-the-repository)
-- [Changelog](#changelog)
-- [Roadmap](#roadmap)
-
 ## Purpose and scope
 The goal of this repository is to offer further assistance and a development guide for making custom reports that can be used with Viedoc Reports.  This contains tools to help with report development, some troubleshooting advice, and sample report scripts.
 Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
@@ -28,10 +21,9 @@ Details about Viedoc Reports and non-development aspects of custom reports can b
 - [utils](./utils/README.md): this folder contains additional tools that help in the report development and debugging process.
 
 ## Changelog
-2025-04-23: Link updates and general rewriting of content
-2025-04-04: Updated list specifiying supported packages
-2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.
-
+2025-04-23: Link updates and general rewriting of content  
+2025-04-04: Updated list specifiying supported packages  
+2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.  
 
 ## Roadmap
 - add information about report testing
