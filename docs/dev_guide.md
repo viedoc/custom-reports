@@ -10,7 +10,7 @@ This guide provides an outline on how to set up a local development environment 
 
 ## Setup
 
-- Install the supported packages (see ['supported Packages' section](#supported-packages)) by running the code snippet below in an R terminal or in an R script. These packages will remain installed on the computer between coding sessions, and you should only need to run it once.
+- Install the supported packages (see ['supported Packages' section](#supported-packages)) by running the code snippet below in an R terminal or in an R script. These packages will remain installed on the computer between coding sessions. You only need to run it once.
 ```R
 install.packages(c("vctrs","R6","generics","glue","lifecycle","magrittr","tibble","ellipsis","pillar","crayon","pkgconfig","tidyselect","purrr","Rcpp","tidyr","dplyr","rlang","lubridate","stringr","stringi","plotly","survival","xml2"))
 ```
@@ -55,7 +55,7 @@ metadata <- readRDS("metadata.rds")
 ## Data Available for custom reports 
 
 > [!Important]
-> The sample data provided in the edcData.rds file may include sensitive data; only authorized people should have access to this data.
+> The sample data provided in the edcData.rds file may include sensitive and/or blinded data. Only authorized people should have access to this data.
 
 The edcData, params and metadata .rds files contained in the sample folder represent a 10-subject sample of the data available in the Viedoc Reports environment to aid with local development. Find detailed information on the data structure by following the links below:
 - [edcData](./data_obj/edcData.md) contains CRF and operational data such as queries and medical coding. 
