@@ -8,23 +8,23 @@
 ### Purpose
 Identify all active design versions across implemented forms. 
 This assists:
-- designers/support when debugging issues in studies that may result from inconsistent versioning between patients, as this information is typically found in data exports which contain sensitive information. 
-- administrators who will be implementing version updates or revisions.
-- designers who may need to implement revisions across design versions
+- Designers/support when debugging issues in studies that may result from inconsistent versioning between patients, as this information is typically found in data exports which contain sensitive information. 
+- Administrators who will be implementing version updates or revisions.
+- Designers who may need to implement revisions across design versions.
 
 ### Source Data/required data inputs:
 - `edcData`
 - `metadata$FormDef`
 
 ### Output:
-Creates a table with showing the number of instantiated forms of each design version, where each form is a column, and each design version as a row. 
+Creates a table showing the number of instantiated forms of each design version, where each form is a column, and each design version as a row. 
 </details>
 
 ## Aging and old queries report
 <details>
   
 ### Purpose
-Give an overview of queries and time spent in various states to assist in the identification of bottlenecks or red flags.
+Gives an overview of queries and time spent in various states to assist in the identification of bottlenecks or red flags.
 
 ### Source Data/required data inputs:
 - `edcData$ProcessedQueries`
