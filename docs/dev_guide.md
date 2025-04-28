@@ -463,10 +463,11 @@ Error in library(R6) : there is no package called 'R6'
 Cause: 
 You have not installed the packages. Each package must be installed the first time you work in an R environment.
 
-Fix:
+Fix: see [Setup](./dev_guide.md#setup) above
 ``` R
 install.packages("R6")
 ```
+
 
 </details>
 <details><summary><H3>Error: Cannot Open File</H3></summary>
@@ -479,7 +480,7 @@ install.packages("R6")
 The R terminal is not using the correct directory as the 'working directory'
 
 Fix:
-> Ensure that you substitude in the correct path to your R files
+> Ensure that you substitute in the correct path to your R files
 ```R
 setwd("C:\\Users\\JackSpratt\\Downloads\\SampleForCustomReports")
 ```
@@ -498,12 +499,24 @@ The column or row that you are trying to get doesn't exist. You may be calling t
 
 </details>
 <details><summary><H3>Error: object of type ‘closure’ is not subsettable</H3></summary>
+ 
+``` R
+Error in mean[1] : object of type 'closure' is not subsettable
+```
+Possible cause:
+Cause: A typo (e.g., forgot to add parentheses or had a name clash with a function) resulted in an object being interpreted as a function.
 
-Likely cause:
-Cause: You tried to index a function. Likely due to a typo (e.g., forgot to add parentheses or had a name clash with a function).
+Possible cause: You overrode the built-in mean function with a custom function, then tried to index it as if it were a list or vector. (see [Incorrect Indexing](./dev_guide.md#incorrect-indexing-) below)
+Example:
+``` R
+mean <- function(x) x + 1
+mean[1]
+```
 
 </details></details>
 <details><summary><H2>Common errors after publishing (it ran fine locally) </H2></summary>
+Differences to consider besides the functions available those relating to the additional data available in the production environment, specifically with respect to additional/nonstandard datatypes and data and data labels from earlier design versions.
+
 <details><summary><H3>Error: Could not find function</H3></summary>
  
 Error:
@@ -511,11 +524,11 @@ Error:
 > Could not find function "..."
 ```
 (Likely) cause:
-You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Dev Guide: Environment ](https://github.com/viedoc/custom-reports/blob/main/docs/dev-guide.md#environment)).
+You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Supported Packages](https://github.com/viedoc/custom-reports/blob/syllybelle-prune-contents/docs/dev_guide.md#-supported-packages-) above).
 Alternatively, you may be using a different version of a package that is supported. Upload [this utility script](https://github.com/viedoc/custom-reports/blob/main/utils/version_checker.R) as a Custom Report to see the package versions that are used by Viedoc Reports.
 
 Fix:
-Find an alternative function to achieve the result, if possible
+Find an alternative function to achieve the same result, if possible.
 
 </details>
 <details><summary><H3>Error: uses the forbidden function</H3></summary>
@@ -528,8 +541,7 @@ Custom report code uses the forbidden functions (library). Please check and uplo
 You have forgotten to comment out or delete the development environment setup code.
 
 Fix:
-Ensure any code included to load packages and data is commented out. 
-
+Ensure any code included to load packages and data is commented out. Check the list of [Forbidden Functions](./dev_guide.md#blocked-functions) above to make sure you're not using a blocked function in your code.
 
 </details>
 <details><summary><H3>Error: no applicable method function</H3></summary>
@@ -542,19 +554,36 @@ no applicable method for [...] applied to an object of class "NULL"
 The input form requested contains no data or does not exist.
 
 Fix:
-- Ensure there is data for the forms used.
-- Add null checks to your code.
+- Ensure there is data for the forms used, and that you are not filtering out all valid cases (see [Handling null cases](https://github.com/viedoc/custom-reports/blob/syllybelle-prune-contents/docs/dev_guide.md#handling-null-cases-) below). Add null checks to your code, to prevent errors if there are no cases
+- Confirm that you are not indexing a non-existent column (see [Incorrect Indexing](https://github.com/viedoc/custom-reports/blob/syllybelle-prune-contents/docs/dev_guide.md#incorrect-indexing-) below.)
+- Confirm that datatypes are explicitly handled. Production data may introduce new datatypes that are not present in the data sample.
 
 </details>
 </details>
 
 <details><summary><h2>Datatype issues </h2></summary>
+Datatype issues can often be very insidious, as they can fail 'silently', or masquerade  as other issues.
+For example, a mismatch in conditional logic can cause incorrect filtering:
+ 
+ ```R
+df <- data.frame(id = c(1, 2, 3), name = c("Alice", "Bob", "Carol"))
+df %>% filter(id == "2")  # returns no rows
+```
 
+Joining dataframes with mismatched columns can also be an issue.
+```R
+df1 <- data.frame(id = 1:3)  # integers
+df2 <- data.frame(id = c("1", "2", "3"))  # character
+
+inner_join(df1, df2, by = "id")  # returns null
+```
+
+
+ 
 ### Get value from a dataframe as a string
-R will return a factor or numeric by default, depending on how the dataframe was created. To ensure a string, use paste0() or as.character().
+R will return a factor or numeric by default, depending on how the dataframe was created. To ensure a string, use `paste0()` or `as.character()`.
 
  ```R
-
 item_id <- paste0(df$itemId[1])  # Ensures value is string
 # alternatively:
 item_id <- as.character(df$itemId[1])
@@ -562,20 +591,19 @@ item_id <- as.character(df$itemId[1])
 ```
 
 ### Convert DataFrame Columns to Specific Types
-Sometimes, especially after reading from CSVs or APIs, the data types may not be what you expect. Use mutate(across(...)) for converting multiple columns:
+Sometimes, especially after reading from CSVs or APIs, the data types may not be what you expect. Use `mutate(across(...))` for converting multiple columns:
 ```R
 df <- df %>%
   mutate(across(everything(), as.character))  # or as.numeric, as.factor, etc.
 ```
-Use str(df) or glimpse(df) to confirm column types.
+Use `str(df)` or `glimpse(df)` to confirm column types.
 
 </details>
 <details><summary><h2>Handling null cases </h2></summary>
 
-Certain functions will raise errors if they receive a NULL value, instead of an empty dataframe or list. This can often be an issue in Viedoc Reports, but not in your local enviornment.
+Certain functions will raise errors if they receive a NULL value, instead of an empty dataframe or list. This can often be an issue in Viedoc Reports, but not in your local environment.
 
-It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occured,
-edcData$Forms$AE will return null.
+It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occurred, `edcData$Forms$AE` will return null.
 
 The way to fix this issue is to create a default object to return.
 
