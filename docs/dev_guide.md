@@ -1,155 +1,81 @@
 # Development guide
 [return to root README](./README.md)
 
-## Available Data/Valid inputs
-While developing, the edcData an, params and metadata .rds files represent data available in the Viedoc Reports environment. Instructions on how to obtain these files can be found in the [eLearning Designer User Guide](https://help.viedoc.net/c/e311e6/) article entitled "Creating custom reports". Detailed information on the data structure can be found by following the links below:
-- [edcData](./data_obj/edcData.md) contains the CRF and operational data such as queries and medical coding. Note that only a sample of subject data is provided, but the subtables contained will be unique to the study. 
+This guide provides an outline on how to set up a local development environment and write a custom report, including accessing sample data and custom utilities, and the output object requirements. 
+
+## Prerequisites:
+- The study-specific `SampleForCustomReports.zip` file from Viedoc Reports. Instructions on obtaining this Viedoc can be found in the Viedoc Reports User Guide article ['Creating custom reports'](https://help.viedoc.net/c/8a3600/6e9c82/). The contents of this zip file are outlined in '[Available data](#available-datavalid-inputs)'
+ below. 
+- [R](https://posit.co/downloads/) version 4.04 or later, optionally with R Studio or other IDE.
+
+## Setup
+
+- Install the supported packages (see ['supported Packages' section](#supported-packages)) by running the code snippet below in an R terminal or in an R script. These packages will remain installed on the computer between coding sessions, and you should only need to run it once.
+```R
+install.packages(c("vctrs","R6","generics","glue","lifecycle","magrittr","tibble","ellipsis","pillar","crayon","pkgconfig","tidyselect","purrr","Rcpp","tidyr","dplyr","rlang","lubridate","stringr","stringi","plotly","survival","xml2"))
+```
+- Open the unzipped folder in your coding environment and create a new R file for your R script.
+- Load the installed packages, additional utility functions provided and datasets into memory using the code snippet below. Note that you will need to run this every time the environment restarts (e.g. after restarting the R terminal, or reopening R Studio). You must remove this code before any script is uploaded, or the script will error.
+
+<details> <summary> Expand setup code: :</summary>
+
+```R
+library(vctrs)
+library(R6)
+library(generics)
+library(glue)
+library(lifecycle)
+library(magrittr)
+library(tibble)
+library(ellipsis)
+library(pillar)
+library(crayon)
+library(pkgconfig)
+library(tidyselect)
+library(purrr)
+library(Rcpp)
+library(tidyr)
+library(dplyr)
+library(rlang)
+library(lubridate)
+library(stringr)
+library(stringi)
+library(plotly)
+library(survival)
+library(xml2)
+
+# setwd("C:\\Users\\SvenSvensson\\Downloads\\SampleForCustomReports") # typically not necessary in R Studio
+source("utilityFunctions.R", local = T)
+edcData <- readRDS("edcData.rds")
+params <- readRDS("params.rds")
+metadata <- readRDS("metadata.rds")
+```
+</details>
+
+## Data Available for custom reports 
+
+> [!Important]
+> The sample data provided in the edcData.rds file may include sensitive data; only authorized people should have access to this data.
+
+The edcData, params and metadata .rds files contained in the sample folder represent a 10-subject sample of the data available in the Viedoc Reports environment to aid with local development. Find detailed information on the data structure by following the links below:
+- [edcData](./data_obj/edcData.md) contains CRF and operational data such as queries and medical coding. 
 - [params](./data_obj/params.md) contains data from Viedoc Administrator, including study, site and user information
-- [metadata](./data_obj/metadata.md) contains data from Viedoc Designer and is linked to the design version.
-
-## Output Object
-
-`reportOutput` - This variable should contain the final output that needs to bedisplayed in the screen.  It is a list of lists
-This variable is a list. There should be one or more entry in the list.  
-Each entry is a 'sub-report' output, made available via a drop-down menu (Similar to "by Country", "by Site', "by Subject" drop-down in theEnrollment Status report).  
-
-<details><summary><h3>  The sub-report  <h3/></summary>
-Each subreport item is a named list, where the name is the display name of the subreport, and the list contains the object to be displayed as the first item.  
-- if the object is a table, it must be a data.frame() object labelled "data".  
-- if the object is a graph, it must be a plot_ly() object labelled "plot".  
-The pseudocode below gives an idea of the structure and the data types required, and additional information regarding the optional parameters is provided in the examples.  
-
-```
-reportOutput <- list(
-"subreport1Name" = list(
-    EITHER: "data"=data.frame()
-    OR:     "plot=plot_ly(),
-    OPTIONAL: footer=list(text = "", displayOnly=FALSE),  
-    OPTIONAL: header=list(
-                          firstLevel = c('col1-3', 'col1-3', 'col1-3', 'col4'),
-                          secondLevel = c('col1', 'col2', 'col3', 'col4'))
-    OPTIONAL: columnDefs=getColumnDefs() # see util function below
-  ),
-"subreport2Name" ...
-)
-
-```
-</details>
-
-<details><summary><h4>  Examples  <h3/></summary>
-An example of a single output: 
-  
-```R 
-reportOutput <- list("Name of output" = list("data" = data.frame()))
-```
-
-The "Name of output" will be displayed in the screen via a drop-down menu(incase of more than one entry). On selecting that output, the data.frame in the above entry will be displayed in the screen.
-An example of two outputs:
-
-```R 
-reportOutput <- list(
-                   "Name of first output" = list("data" = data.frame()),
-                   "Name of second output" = list("data" = data.frame())
-                 )
-```
-
-Two outputs (one data frame and another plotly)
-
-```R 
-reportOutput <- list(
-                  "Name of first output" = list("data" = data.frame()),
-                  "Name of second output" = list("plot" = plot_ly())
-                )
-```
+- [metadata](./data_obj/metadata.md) contains data from Viedoc Designer linked to the design version.
 
 
+## Available packages and functions
 
-> [!NOTE] 
-> The name of the list entry containing the data.frame should be named "data" and the plot should be named "plot", as given in above examples. Custom report supports only plot_ly plots. 
-> Please refer to https://plotly.com/r/reference/ for help on plotly plots.
+This includes using locally saved sample data, package management and, when an R script for a custom report is published in Viedoc, it will run in a managed runtime environment on Viedoc Servers which may be different to your development environment.  
+For security reasons, only a curated set of packages and functions are available in this environment, as listed below in Supported packages. 
 
-</details>
+> [!Note]  
+> Differences between package versions in your local development environment and in the runtime environment on Viedoc Servers may cause errors. This can be because functions inside packages have been deprecated or changed recently.
+> At the time of writing, the deployed R version is 4.04. To confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).    
 
-### Additional customisation parameters
+Viedoc has developed some additional "utility functions" which are preloaded in the Viedoc Reports runtime environment to assist with data wrangling and presentation. The setup code above loads the utility functions from the downloaded folder into your local development environment. The functions are also available [here](../utils/utilityFunctions.R) and usage information for these functions is provided below. 
 
-The following parameters can be passed to the  `reportOutput` variable to improve how the report displays
-
-<details><summary><h4> Footer </h4></summary>
-
-A footer to the output table can be included as given in the below example:
-
-```R 
-reportOutput <- list("by Country" = list("data" = data.frame(), footer =list(text = "Additional notes to the table", displayOnly = TRUE)))
-```
-
-The footer text can include HTML tags. 
-eg. `"This footer text <strong>emphasises</strong> a word"` renders like this: "This footer text <strong>emphasises</strong> a word"
-
-`displayOnly` - a logical parameter that affects how the custom report behaves on download.
-
-If `TRUE`, the footer will be displayed, but ignored when the report is downloaded. If `FALSE`, the footer will beincluded in the download.
-
-If "displayOnly" is not mentioned, by default it is considered to be FALSE
-For a plot output, if "`displayOnly = FALSE`", then please use plotly `bottommargin` (refer the example code below) to sufficiently display the note in the plot
-</details>
-
-<details><summary><h4> Custom headers </h4></summary>
-
-Normally, the data.frame column labels will be used as table header.However, the column labels can be overridden using the header feature asgiven below:
-
-```R 
-newHeader <- list(firstLevel = c("Study", "Country", "Site Code", "SiteName", "Subject", "Screened", "Enrolled", "Candidate", "Ongoing","Completed", "Withdrawn"))
-reportOutput <- list("by Country" = list("data" = data.frame(), header =newHeader))
-```
-
-Two levels of header can be set for a table as given below:
-```R
- twoLevelHeader <- list(
-   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6", "Column 7", rep("Covers Columns 8, 9", 2)),
-   secondLevel = c("Column 3", "Column 4", "Column 5", "Column 8", "Column 9")
- )
- reportOutput <- list("by Country" = list("data" = data.frame(), header = twoLevelHeader))
-```
-
-The above code will render a header as shown below:
-
-```
---------------------------------------------------------------------------------------------------
-                    |     Covers Columns 3, 4, 5     |                     | Covers Columns 8, 9 | 
--------------------------------------------------------------------------------------------------
-Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 | Column7 | Column 8 | Column 9 | 
--------------------------------------------------------------------------------------------------
-```
-
-> [!CAUTION]
-> If the wrong number of names are provided for the header parameter, it will revert to the labels included in the table.
-</details>
-
-<details><summary><h4> Custom column widths </h3></summary>
-
-The column width can be defined for all or selected columns as give below:
-
-```R
-outputdata <- data.frame() # Output data
-
-widths <- rep(0, ncol(outputdata)) # set all columns to auto width
-widths[2] <- 105 # Set 2nd column to 105 px
-widths[5] <- 90 # Set 5th column to 90 px
-widths[6:11] <- 60 # Set columns 6 to 11 to 60 px
-
-newcolumnDefs <- getColumnDefs(colwidths = widths)
-
-reportOutput <- list(
-  "by Country" = list("data" = outputdata, columnDefs =newcolumnDefs)
-  )
-```
-</details>
-
-## Environment
-The R script for a custom report is run in a managed environment which may be different to your development environment. It is important to therefore be aware of what R packages (and their versions) the script can access. At the time of writing, the deployed R version is 4.04.
-In order to confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).
-
-<details><summary><h3> Supported packages:</h3></summary>  
+<details> <summary><h3> Supported packages </h3></summary>
+    
 - vctrs  <br>
 - R6  <br>
 - generics  <br>
@@ -175,8 +101,8 @@ In order to confirm the package versions used on your system and on in the Viedo
 - xml2  <br>
 </details>
 
-### Blocked functions
-<details><summary>  Functions that have never been permitted :</summary>
+<details><summary><h3>Blocked functions</h3></summary>
+    
 - system <br>
 - system2 <br>
 - dir.create <br>
@@ -192,10 +118,8 @@ In order to confirm the package versions used on your system and on in the Viedo
 - file.create <br>
 - file.append <br>
 - setwd <br>
-</details>  
 
-> [!IMPORTANT]  
-> <details><summary> Newly blocked (Viedoc 4.84)</summary>  
+> Newly blocked (Viedoc 4.84):
 > - source  <br>
 > - readLine  <br>
 > - scan  <br>
@@ -212,10 +136,8 @@ In order to confirm the package versions used on your system and on in the Viedo
 > - exec_background  <br>
 > - exec_internal  <br>
 > - ps  <br>
-</details>
 
-> [!IMPORTANT]  
-> <details><summary> Currently blocked (Viedoc 4.84), but will be unblocked in 4.85 release</summary>  
+> Temporarily blocked (Viedoc 4.84), but will be unblocked in 4.85 release  
 > - run  <br>
 > - process$new  <br>
 > - get  <br>
@@ -228,16 +150,20 @@ In order to confirm the package versions used on your system and on in the Viedo
 > - evalq  <br>
 > - with  <br>
 > - getFromNamespac <br>
+
 </details>
 
-### Utility functions
-The following custom Viedoc utility functions have been loaded into the runtime environment in Viedoc Reports to assist with data wrangling and presentation.
+<details><summary><h3>Utility functions</h3></summary>  
 
-<details><summary>isValid(x) </summary>  
+<details><summary>isValid </summary>  
+    
+```R
+isValid(x)
+```
 
-- purpose: Check whether a value is valid
-- input parameters: any
-- returns logical: 
+- Purpose: Check whether a value is valid
+- Input parameters: any
+- Returns logical: 
   - TRUE: 
     - 1. 
       - is not atomic
@@ -245,7 +171,7 @@ The following custom Viedoc utility functions have been loaded into the runtime 
       - is atomic AND 
       - is not null AND 
       - all is not NA AND 
-      - is not character or logical when vector contains no empty strings, ommiting NA
+      - is not character or logical when vector contains no empty strings, omitting NA
   - FALSE: 
     - 1. 
       - is atomic AND 
@@ -258,34 +184,42 @@ The following custom Viedoc utility functions have been loaded into the runtime 
       - is atomic AND 
       - is not null AND 
       - all is not NA AND
-      - is character OR Logical AND vector contains no empty strings when omiting NA
+      - is character OR Logical AND vector contains no empty strings when omitting NA
 
 </details>
 
-<details><summary>validLevels(vec, type = "", decreasing = T) </summary>  
+<details><summary>validLevels </summary>  
+    
+```R
+validLevels(vec, type = "", decreasing = T)
+```
 
-- Purpose: Get the unique values in a character vector or factor. In case of factor, unique levels are extracted while dropping the levels that are not present in the input
+- Purpose: Get unique values in a character vector or factor. If the input argument is a factor, unique levels are extracted while dropping the levels that are not present in the input
 - Input params:
-  - vec - the character vector or factor from which the unique values should be extracted
-  - type 
+  - Vec - the character vector or factor from which the unique values should be extracted
+  - Type 
      - if type is left blank, the result is sorted alphabetically.
      - if type == 'frequency', the result is sorted based on the frequency of the individual values in the input vector
-  - decreasing 
+  - Decreasing 
     - if type is blank, this value is ignored. 
     - If type == "frequency", then this value is used to identify the sort order of the frequency
-- return object
+- Return object
   - if type == "" & input is a factor, returns levels(vec)[levels(vec) %in% unique(vec)]
   - if type == "" & input is not a factor, returns sort(unique(vec))
   - if type == "frequency", returns names(sort(table(vec)[table(vec)!=0], decreasing = decreasing))
   - else returns character(0)
 
 </details>
-<details><summary>prepareDataForDisplay(data, forceFactor = c(), forceCharacter = c(), blankText = "(blank)", retainFactor = c())</summary>  
+<details><summary>prepareDataForDisplay</summary>  
+    
+```R
+prepareDataForDisplay(data, forceFactor = c(), forceCharacter = c(), blankText = "(blank)", retainFactor = c()
+```
 
-- purpose: Prepare the data.frame for optimal dislay via the DT package
-- input parameters:
-  - data - data.frame that should be prepared for display 
-  - forceFactor 
+- Purpose: Prepare the data.frame for optimal display via the DT package
+- Input parameters:
+  - Data - data.frame that should be prepared for display 
+  - ForceFactor 
     - a character vector of column names that should be forced as factor field.
     - This can be used to force SiteCode into character, without which it would default to numeric.
     - This will help in an optimal filtering feature for the numeric columns (dropdown instead of range filter)
@@ -298,39 +232,54 @@ The following custom Viedoc utility functions have been loaded into the runtime 
 - output: data.frame (or same as input data object)
 
 </details>
-<details><summary>setNAtoBlank(data, replaceWithText = "", forceCharacter = c())</summary>  
+<details><summary>setNAtoBlank</summary>  
 
-- purpose: Remove all NA fields and replace them with blank or substitute text
-- input parameters
+```R
+setNAtoBlank(data, replaceWithText = "", forceCharacter = c()
+```
+
+- Purpose: Remove all NA fields and replace them with blank or substitute text
+- Input parameters
   - data - input data.frame
   - replaceWithText - Substitute text to be used as replacement for blank values
-  - forceCharacter - a characer vector of columns names that should be forced to character type instead of  numeric
-- output: data.frame
+  - forceCharacter - a characer vector of columns names that should be forced to character type instead of numeric
+- Output: data.frame
 
 </details>
-<details><summary>getLabel(data)</summary>  
+<details><summary>getLabel</summary>  
 
+```R
+getLabel(data)
+```    
+   
 - Purpose: Get the column labels of a data.frame as character vector
-- input parameters: 
+- Input parameters: 
   - data - input data.frame
-- output: character vector
+- Output: character vector
 
 </details>
-<details><summary>setLabel(data, labels)</summary>  
+<details><summary>setLabel</summary>  
+
+```R
+setLabel(data, labels)
+```   
 
 - Purpose: Set the column labels of a data.frame
 - Input parameters: 
   - data - input data.frame
-- labels - a list of column labels. The number of columns in the data and the count of labels provided in this parameter should match
+- Labels - a list of column labels. The number of columns in the data and the count of labels provided in this parameter should match
 - Output: data.frame
 
 </details>
-<details><summary>getColumnDefs(colwidths = NA, data = NA, alignRight = NA, alignLeft = NA, alignCenter = NA)</summary>  
+<details><summary>getColumnDefs</summary>  
+
+```R
+getColumnDefs(colwidths = NA, data = NA, alignRight = NA, alignLeft = NA, alignCenter = NA)
+```
 
 - Purpose: Provide an easy way to define column widths for report outputs. Uses DT package
 - Parameters:
-  - colwidths - a numeric vector of column widths in pixels. Length of this parameter should match the count of columns in the data for which this will be used.
-  -             This parameter is ignored if data is provided
+  - colwidths - a numeric vector of column widths in pixels. Length of this parameter should match the count of columns in the data for which this will be used. This parameter is ignored if data is provided
   - data - if data if provided, then the column width is calculated based on the data
   - alignRight - a numeric vector of column numbers that should be right-aligned in display
   - alignLeft - a numeric vector of column numbers that should be left-aligned in display
@@ -339,3 +288,293 @@ The following custom Viedoc utility functions have been loaded into the runtime 
 - Output: list of column definitions as described in DT package.
 
 </details>
+</details>
+
+## The ‘reportObject’ Output 
+
+
+<details><summary><h3>Structure overview<h3/></summary>
+
+A variable referenced as ‘reportObject’ must be specified in the R script. This object will be used to render the custom reports.
+` reportObject’ must be a list of lists - each indexed/named value in the top-level list is itself an indexed list that represents a ‘sub-report’. The index for each sub-report is used as the ‘title’ of the sub-report.
+A sub-report contains either a table or a graph object to be rendered. Only one sub-report is visible at a time in Viedoc Reports, and If more than one sub-report is included (i.e. the reportOutput list contains more than one item), a drop-down menu becomes available, populated with the sub-report titles.
+Each sub-report list must contain specific indexes/names for the values, as they are used to understand what objects to render. 
+- if the object is a table, it must be a data.frame() object labelled "data". 
+- if the object is a graph, it must be a plot_ly() object labelled "plot". 
+The pseudocode below gives an idea of the structure and the data types required, and additional examples provide information on optional parameters.
+
+```
+reportOutput <- list(
+"My First Table Report" = list(
+    "data"=df
+    OR:     
+    footer=list(text = "", displayOnly=FALSE),   # Optional
+     header= # Optional argument
+list
+                          firstLevel = c('col1-3', 'col1-3', 'col1-3', 'col4'),
+                          secondLevel = c('col1', 'col2', 'col3', 'col4') # Optional for header item
+)
+    OPTIONAL: columnDefs=getColumnDefs() # see util function below
+  ),
+"My Plot Report" = list(
+    "plot=plot_ly(df),
+    footer=list(text = "", displayOnly=FALSE)  # Optional
+  ),
+"My Second Table Report" = list(
+    "data"=…)
+)
+
+```
+
+An example of a single table output: 
+```R 
+reportOutput <- list("Name of output" = list("data" = data.frame()))
+``` 
+
+An example of a single graph output: 
+```R 
+reportOutput <- list("Name of output" = list("data" = plot_ly()))
+
+An example of two outputs:
+```R 
+reportOutput <- list(
+                   "Name of first output" = list("data" = data.frame()),
+                   "Name of second output" = list("data" = data.frame())
+                 )
+```
+
+Two outputs (one data frame and another plotly)
+```R 
+reportOutput <- list(
+                  "Name of first output" = list("data" = data.frame()),
+                  "Name of second output" = list("plot" = plot_ly())
+                )
+```
+
+> [!NOTE] 
+> - Custom report supports only plot_ly plots. Please refer to https://plotly.com/r/reference/ for help on plotly plots.
+>- Using words other than “data” or “plot” will result in error
+
+</details>
+
+### Additional customization parameters
+
+The following parameters can be passed to the `reportOutput` variable to improve rendering
+
+<details><summary><h4> Footer </h4></summary>
+
+A footer to the output table can be included as given in the below example:
+
+```R 
+reportOutput <- list("by Country" = list("data" = data.frame(), footer =list(text = "Additional notes to the table", displayOnly = TRUE)))
+```
+
+The footer text can include HTML tags. 
+eg. `"This footer text <strong>emphasizes</strong> a word"` renders like this: "This footer text <strong>emphasizes</strong> a word"
+- `displayOnly` - an optional logical parameter that affects how the custom report behaves on download. If not specified, defaults to FALSE.
+- If `TRUE`, the footer will be displayed, but ignored when the report is downloaded. 
+- If `FALSE`, the footer will be included in the download.
+For a plot output, if "`displayOnly = FALSE`", then please use plotly `bottommargin` (refer the example code below) to sufficiently display the note in the plot
+</details>
+<details><summary><h4> Custom headers </h4></summary>
+
+Normally, the data.frame column labels will be used as table header. However, the column labels can be overridden using the header feature as given below:
+```R 
+newHeader <- list(firstLevel = c("Study", "Country", "Site Code", "SiteName", "Subject", "Screened", "Enrolled", "Candidate", "Ongoing","Completed", "Withdrawn"))
+reportOutput <- list("by Country" = list("data" = data.frame(), header =newHeader))
+```
+Two levels of header can be set for a table as given below:
+```R
+ twoLevelHeader <- list(
+   firstLevel = c("Column 1", "Column 2", rep("Covers Columns 3, 4, 5", 3), "Column 6", "Column 7", rep("Covers Columns 8, 9", 2)),
+   secondLevel = c("Column 3", "Column 4", "Column 5", "Column 8", "Column 9")
+ )
+ reportOutput <- list("by Country" = list("data" = data.frame(), header = twoLevelHeader))
+```
+
+The above code will render a header as shown below:
+
+```
+--------------------------------------------------------------------------------------------------
+                    |     Covers Columns 3, 4, 5     |                     | Covers Columns 8, 9 | 
+-------------------------------------------------------------------------------------------------
+Column 1 | Column 2 | Column 3 | Column 4 | Column 5 | Column 6 | Column7 | Column 8 | Column 9 | 
+-------------------------------------------------------------------------------------------------
+```
+
+A single-level header can include HTML tags. 
+
+> [!CAUTION]
+> If the wrong number of names are provided for the header parameter, it will revert to the labels included in the table.
+</details>
+
+<details><summary><h4> Custom column widths </h3></summary>
+The column width can be defined for all or selected columns as give below: 
+
+```R
+df <- data.frame() # Output data
+
+widths <- rep(0, ncol(df)) # set all columns to auto width
+widths[2] <- 105 # Set 2nd column to 105 px
+widths[5] <- 90 # Set 5th column to 90 px
+widths[6:11] <- 60 # Set columns 6 to 11 to 60 px
+
+newcolumnDefs <- getColumnDefs(colwidths = widths)
+
+reportOutput <- list(
+  "by Country" = list("data" = df, columnDefs =newcolumnDefs)
+  )
+```
+</details>
+
+# Gotchas, FAQs and debugging
+
+## Actions to avoid
+Please exercise caution to avoid below scenarios in your code:
+
+- Infinite loops
+- Data manipulation that might yield huge incorrect data ending up taking unnecessary disk space
+- Any tampering with the host system properties and performance
+
+## Datatype issues
+### Get value from a dataframe as a string
+ ```R
+item_id <- paste0(df$itemId[1])
+```
+
+## Handling null cases
+Certain functions will raise errors if they receive a null value, rather than a specific object type (see datatype issues above).
+This can happen when a value doesn't exist in a table. In R, empty tables or empty values in a list will be returned as Null, rather than an empty instance of the object.
+
+It's important to note that if no forms have been completed, they will not be represented in the dataset, so for example, if no adverse events have occured,
+edcData$Forms$AE will return null
+
+ ```R
+myFunction <- function(df)
+default_value <- NA_character_
+if (nrow(df) == 0) {
+    return(default_value)
+  }
+```
+
+### Get value based on another column if exists
+
+```R
+first_value <- default_value
+
+if(!is.null(df) && nrow(df) > 0){
+  if (id_value %in% df$id_column){
+    values_where_true <- df %>%
+      filter(id_column == id_value) %>%
+      select(value_column)
+    first_value <- paste0(
+      values_where_true[
+        order(values_where_true$date_column, decreasing = FALSE),
+      ][1]
+    )
+  }
+}
+```
+
+
+## Troubleshooting
+
+The main issues with code and how to troubleshoot is to understand what your code is supposed to be doing. The most important factors to start troubleshooting are:
+- What is the goal of the code?
+- What inputs are expected?
+- What outputs should look like?
+
+Below you find some general tips that can help you with your troubleshooting approach.
+
+General tips:
+- Confirm that your functions exist and behave the same way as the version available in the runtime environment
+- Ensure you have data populated for the tables you are using as inputs
+- Ensure your Reports data is up-to-date with the EDC data (data will not automatically sync in training studies.)
+- When merging, confirm column data types are as expected
+
+<details><summary>Common errors </summary>
+
+Error:
+``` R
+Error in library(R6) : 
+  there is no package called 'R6'
+```
+(Likely) cause: 
+You have not installed the packages. Each package must be installed the first time you work in an R environment.
+
+Fix:
+install.packages("R6")
+
+
+``` R
+> In file(filename, "r", encoding = encoding) :
+>   cannot open file 'utilityFunctions.R': No such file or directory
+```
+(Likely) cause:
+The R terminal is not using the correct directory as the 'working directory'
+
+Fix:
+> Ensure that you substitude in the correct path to your R files
+```R
+setwd("C:\\Users\\JackSpratt\\Downloads\\SampleForCustomReports")
+```
+
+Error:
+``` R
+> subscript out of bounds
+```
+(Likely) cause:
+The column or row that you are trying to get doesn't exist. You may be calling the [n+1]th item in a list that is n items long, or using an incorrect column name.
+
+Error:
+```R
+> object of type ‘closure’ is not subsettable
+```
+(Likely) cause:
+You are tryiny to subset or access some elements of a function
+There is likely an unclosed bracket or a missing comma, which is making R interpret an object as a function (which is of datatype 'closure')
+
+
+### Errors in Viedoc Reports (it ran fine locally)
+Error:
+``` R
+> Could not find function "..."
+```
+(Likely) cause:
+You are using a package or function other than ones that are supported by Viedoc Custom Report (see [Dev Guide: Environment ](https://github.com/viedoc/custom-reports/blob/main/docs/dev-guide.md#environment)).
+Alternatively, you may be using a different version of a package that is supported. Upload [this utility script](https://github.com/viedoc/custom-reports/blob/main/utils/version_checker.R) as a Custom Report to see the package versions that are used by Viedoc Reports.
+
+Fix:
+Find an alternative function to achieve the result, if possible
+
+Error:
+```R
+Custom report code uses the forbidden functions (library). Please check and upload the code again.
+```
+(Likely) cause:
+You have forgotten to comment out or delete the development environment setup code.
+
+Fix:
+Ensure any code included to load packages and data is commented out. 
+
+Error:
+``` R
+no applicable method for [...] applied to an object of class "NULL"
+```
+(Possible) cause: 
+The input form requested contains no data or does not exist.
+
+Fix:
+- Ensure there is data for the forms used.
+- Add null checks to your code.
+
+
+</details>
+
+## Data availability
+
+As per current data modelling best-practices, Viedoc separates "transactional" (EDC) and analytical ("Reports") data. 
+To maintain visibility rules, data transfers are conducted per role, as defined in the Reports setup in Designer. Therefore, any reports generated from this data will be based only on data the role has permission to see. 
+Reports are generated on demand (i.e. when a user accesses teh site), so visualisations are always reflective of the data 'analytical' currently available.'
+
+The transactional and analytical databases of production studies sync daily. In order to sync a training study, Reports must be manually turned off for the study (in Admin), and then after about an hour, turned on again.
