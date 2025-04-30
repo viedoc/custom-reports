@@ -604,10 +604,36 @@ It's important to note that if no forms have been completed, they will not be re
 
 The way to fix this issue is to create a default object to return.
 
+### Return text if no data is available
+
+ ```R
+# example 1: if/else logic
+emptyReport <- list("data" = data.frame(EmptyOutput = "No valid subjects."))
+valid_subjects  <- edcData$Forms$DM %>% filter(DMSEX != "F")
+if (nrow(valid_subjects)> 0 && 
+  !is.null(valid_subjects) 
+) {
+ # ...
+} else reportOutput <- list("No report" = emptyReport))
+
+# example 2: functional
+output_generator <- function() {
+  valid_subjects  <- edcData$Forms$DM %>% filter(DMSEX != "F")
+  emptyReport <- list("data" = data.frame(EmptyOutput = "No data available."))
+  if (
+    is.null(valid_subjects) ||
+      nrow(valid_subjects)==0 
+   ) return(list("No reports" = emptyReport))
+  # ...
+}
+
+reportOutput <- output_generator()
+
+```
+
 ### Return NA value if source dataframe is empty
 
  ```R
-# example 1
 myFunction <- function(df)
 default_value <- NA_character_
 if (nrow(df) == 0) {
