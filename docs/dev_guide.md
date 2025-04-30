@@ -617,7 +617,7 @@ if (nrow(valid_subjects)> 0 &&
 } else reportOutput <- list("No report" = emptyReport))
 
 # example 2: functional
-output_generator <- function() {
+generate_output_object <- function() {
   valid_subjects  <- edcData$Forms$DM %>% filter(DMSEX != "F")
   emptyReport <- list("data" = data.frame(EmptyOutput = "No data available."))
   if (
@@ -627,7 +627,7 @@ output_generator <- function() {
   # ...
 }
 
-reportOutput <- output_generator()
+reportOutput <- generate_output_object()
 
 ```
 
