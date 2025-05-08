@@ -18,6 +18,7 @@ Details about Viedoc Reports and non-development aspects of custom reports can b
 - [utils](./utils/README.md): this folder contains additional tools that help in the report development and debugging process.
 
 ## Changelog
+2025-05-08: Changes made to the fellowing reports: Ongoing AE report: Addition of Null checks. Blood Pressure plot: Addition of correct visit sorting.
 2025-04-28: Content formalisation, restructuring and updates to common issues in Dev Guide.  
 2025-04-04: Updated list specifiying supported packages  
 2025-02: initial transfer of documentation and code from eLearning platform to GitHub, decisions regarding repo structure, minor updates to contents.  
