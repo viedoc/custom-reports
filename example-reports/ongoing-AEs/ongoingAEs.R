@@ -25,51 +25,53 @@
 
 # Pull the AE dataset and store it as "ae". If the dataset is missing, then most of the code is skipped and the else-statement 
 # near the end of the script is executed.:
-if(!is.null(edcData$Forms$AE)){
 ae <- edcData$Forms$AE
+if(!is.null(ae)){
+  # Filter for Ongoing AEs:
+  ong <- filter(ae, AEONGOCD == 1)
+  # Filter for AEs that are ongoing for more than 30 days:
+  aeong30 <- filter(ongcolumns, as.Date(AESTDAT) < as.Date(params$dateOfDownload) - 30)
 
-# Filter for Ongoing AEs:
-ong <- filter(ae, AEONGOCD == 1)
+  if(!is.null(ong)){
+    # Sort by Start Date:
+    sortong <- arrange(ong, AESTDAT)
 
-# Sort by Start Date:
-sortong <- arrange(ong, AESTDAT)
+    # Select the necessary columns to exclude code list values and other IDs:
+    ongcolumns <- select(sortong, SiteName, SubjectId, AESPID, AETERM, AESTDAT, AEONGO, AEREL, AEACN, AESEV, AESER, 
+                         AESERCAT1, AESERCAT2, AESERCAT3, AESERCAT4, AESERCAT5, AESERCAT6, AEDTHDAT, AECONTRT, AEOUT)
 
-# Select the necessary columns to exclude code list values and other IDs:
-ongcolumns <- select(sortong, SiteName, SubjectId, AESPID, AETERM, AESTDAT, AEONGO, AEREL, AEACN, AESEV, AESER, 
-                     AESERCAT1, AESERCAT2, AESERCAT3, AESERCAT4, AESERCAT5, AESERCAT6, AEDTHDAT, AECONTRT, AEOUT)
+    # Prepare Data For Display per Utility Functions for both reports:
+    ongcolumns <- prepareDataForDisplay(ongcolumns)
+  } else ongcolumns <- "No data available"
+  if (!is.null(aeong30)){
+  
+    aeong30 <- prepareDataForDisplay(aeong30)
 
+    # Set labels per Utility Functions for both reports:
+    ongcolumns <- setLabel(ongcolumns,
+                          labels=as.list(c(
+                            "Site Name", "Subject ID", "Sequence number", "Description", "Start Date", "Ongoing?", 
+                            "Relationship to the study treatment", "Action taken with study treatment", "Severity", 
+                            "Serious?", "Seriousness criteria 1", "Seriousness criteria 2", "Seriousness criteria 3", 
+                            "Seriousness criteria 4", "Seriousness criteria 5", "Seriousness criteria 6", "Date of Death", 
+                            "Concomitant or additional treatment given", "Outcome")))
 
-# Filter for AEs that are ongoing for more than 30 days:
-aeong30 <- filter(ongcolumns, as.Date(AESTDAT) < as.Date(params$dateOfDownload) - 30)
+    aeong30 <- setLabel(aeong30,
+                        labels=as.list(c(
+                          "Site Name", "Subject ID", "Sequence number", "Description", "Start Date", "Ongoing?", 
+                          "Relationship to the study treatment", "Action taken with study treatment", "Severity", "Serious?", 
+                          "Seriousness criteria 1", "Seriousness criteria 2", "Seriousness criteria 3", 
+                          "Seriousness criteria 4", "Seriousness criteria 5", "Seriousness criteria 6", "Date of Death", 
+                          "Concomitant or additional treatment given", "Outcome")))
+  } else aeong30 <- "No data available"
 
-# Prepare Data For Display per Utility Functions for both reports:
-ongcolumns <- prepareDataForDisplay(ongcolumns)
-aeong30 <- prepareDataForDisplay(aeong30)
-
-# Set labels per Utility Functions for both reports:
-ongcolumns <- setLabel(ongcolumns,
-                      labels=as.list(c(
-                        "Site Name", "Subject ID", "Sequence number", "Description", "Start Date", "Ongoing?", 
-                        "Relationship to the study treatment", "Action taken with study treatment", "Severity", 
-                        "Serious?", "Seriousness criteria 1", "Seriousness criteria 2", "Seriousness criteria 3", 
-                        "Seriousness criteria 4", "Seriousness criteria 5", "Seriousness criteria 6", "Date of Death", 
-                        "Concomitant or additional treatment given", "Outcome")))
-
-aeong30 <- setLabel(aeong30,
-                   labels=as.list(c(
-                     "Site Name", "Subject ID", "Sequence number", "Description", "Start Date", "Ongoing?", 
-                     "Relationship to the study treatment", "Action taken with study treatment", "Severity", "Serious?", 
-                     "Seriousness criteria 1", "Seriousness criteria 2", "Seriousness criteria 3", 
-                     "Seriousness criteria 4", "Seriousness criteria 5", "Seriousness criteria 6", "Date of Death", 
-                     "Concomitant or additional treatment given", "Outcome")))
-
-# Output of the sub-reports:
-reportOutput <- list(
-  "Ongoing AEs" = list("data" = ongcolumns),
-  "Start Date > 30 days" = list ("data" = aeong30))
-
-# These lines of code run only if the AE data is empty:
-}else{
+  # Output of the sub-reports:
+  reportOutput <- list(
+    "Ongoing AEs" = list("data" = ongcolumns),
+    "Start Date > 30 days" = list ("data" = aeong30)
+    )
+    } else {
+  # These lines of code run only if the AE data is empty:
   emptyOutput <-data.frame(EmptyOutput = "No data available.")
   reportOutput <- list(
   "Ongoing AEs" = list("data" = emptyOutput),
