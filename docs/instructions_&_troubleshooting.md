@@ -1,4 +1,4 @@
-# Development guide
+# Custom Reports Instructions & Troubleshooting
 [return to root README](./README.md)
 
 This guide provides an outline on how to set up a local development environment and write a custom report, including accessing sample data and custom utilities, and the output object requirements. 
