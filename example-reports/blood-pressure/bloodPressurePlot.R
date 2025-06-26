@@ -21,6 +21,10 @@ vs <- filter(vs, vs$EventId != "E98_UNS")
 # Parse the data frame for the sake of computational efficiency
 vs <- select(vs, SubjectId, EventName, SYSBP_VSORRES, DIABP_VSORRES)
 
+# Order EventName properly
+visit_order <- c("Screening", "Baseline", "Week 1", "Week 2", "Week 4", "Week 8", "Follow-up")
+vs$EventName <- factor(vs$EventName, levels = visit_order, ordered = TRUE)
+
 # Calculate mean arterial pressure (MAP) and add to the vs data frame
 vs <- mutate(vs, MAP = ((SYSBP_VSORRES + (2*DIABP_VSORRES))/3))
 
