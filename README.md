@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 The goal of this repository is to offer further assistance and a development guide for making custom reports that can be used with Viedoc Reports.  This contains tools to help with report development, some troubleshooting advice, and sample report scripts.
-Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/e311e6/).
+Details about Viedoc Reports and non-development aspects of custom reports can be found in the [Viedoc Designer User Guide](https://help.viedoc.net/c/8a3600).
 
 ## Overview of the repository
 - [Development Guide](./docs/dev_guide.md): This README contains information and resources on how to develop a custom report, including:
