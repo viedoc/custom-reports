@@ -1,5 +1,8 @@
-# Example reports 
+# Example custom reports 
 [return to root README](../README.md)
+
+For more information on custom reports please go to <a href="https://help.viedoc.net/c/8a3600/6e9c82/en/" target="_blank" rel="noopener">Creating custom reports</a> in Viedoc Learning.
+For additional information on example custom reports go to <a href="https://help.viedoc.net/c/8a3600/9fc73b/en/" target="_blank" rel="noopener">Custom reports examples</a> in Viedoc Learning.
 
 > [!Note]
 > The example 'use case' reports have been developed for the [Phase II study design template](./StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml) included in this directory, or any studies that follow the Clinical Data Acquisition Standards Harmonization (CDASH) standards. Some reports depend on a more specialised design, which will be included in the relevant subfolder folder.  
