@@ -11,9 +11,8 @@ More information about Viedoc Reports and custom reports can be found in the [Vi
     - Available packages and functions in Viedoc reports
     - Output format
     - Trouble shooting & common errors
-- available-data-objects: This folder contains descriptions of the data objects available in Viedoc Reports.
-- example-custom-reports: source code for the reports showcased in the [Viedoc Reports User Guide](https://help.viedoc.net/c/8a3600/9fc73b/en/). These have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml). A range of visualisations are implemented across these reports.
-- example-standard-reports: 
-- example-system-reports: reports which  can be added to any study without modification for additional monitoring functionality
-- utility-funtion-scripts: this folder contains additional tools that help in the report development and debugging process.
-
+- available-data-objects: contains descriptions of the data objects available in Viedoc Reports.
+- example-custom-reports: contains code for example custom reports. These have been developed for the [Phase II study design template](./example-reports/StudyDesign_VIEDOC-PHASE-II-TEMPLATE_2.0.xml). A range of visualisations are implemented across these reports.
+- example-standard-reports: contains example R scripts for the standard reports found in Viedoc Reports. Users can use these scripts as is, or edit them to meet their specific needs for their study. 
+- example-system-reports: contains reports that can be added to any study without modification for additional monitoring functionality
+- utility-funtion-scripts: contains additional tools that help in the report development and debugging process.
