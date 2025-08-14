@@ -1,6 +1,7 @@
 # Study-independent functional reports
 
 For more information on custom reports please go to <a href="https://help.viedoc.net/c/8a3600/6e9c82/en/" target="_blank" rel="noopener">Creating custom reports</a> in Viedoc Learning.
+
 For additional information on example custom reports go to <a href="https://help.viedoc.net/c/8a3600/9fc73b/en/" target="_blank" rel="noopener">Custom reports examples</a> in Viedoc Learning.
 
 > These reports can be added to any study without modification for additional monitoring functionality. They use system-generated data as inputs. 
