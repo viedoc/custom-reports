@@ -1,5 +1,9 @@
 # Utilities and development tools
 
+For more information on custom reports please go to <a href="https://help.viedoc.net/c/8a3600/6e9c82/en/" target="_blank" rel="noopener">Creating custom reports</a> in Viedoc Learning.
+
+For additional information on example custom reports go to <a href="https://help.viedoc.net/c/8a3600/9fc73b/en/" target="_blank" rel="noopener">Custom reports examples</a> in Viedoc Learning.
+
 ## [utilityFunctions.R](./utilityFunctions.R)
 These are functions available to any script loaded in the Viedoc Reports Server. See [Utility Function Documentation](../docs/dev_guide.md#utility-functions).
 These functions can be loaded into local workspace using `source("utilityFunctions.R", local = T)` when the utilityFunctions.R script is located in the working directory.
