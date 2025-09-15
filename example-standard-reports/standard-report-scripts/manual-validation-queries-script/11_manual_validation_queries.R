@@ -68,7 +68,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
     ed <- ed %>%
       filter(!is.na(EventInitiatedDate)) %>%
-      select(Country, SiteName, SiteCode, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1], FormId = NA, FormSeq = NA, Total_filled = 1)
     ss <- ss %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
@@ -83,13 +83,13 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     # Form Level ----
     formDetails <- qry %>%
-      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormSeq")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormSeq")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms
     
-    formLevel <- countQueries(qry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
+    formLevel <- countQueries(qry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
       data.frame() %>%
       mutate(
         processedQries = rowSums(across(c(resolvedQueries, rejectedQueries, approvedQueries, closedQueries))),
@@ -97,7 +97,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
         avgResolutionTime = ifelse(is.nan(avgResolutionTime), NA, avgResolutionTime),
         avgApprovalTime = ifelse(is.nan(avgApprovalTime), NA, avgApprovalTime)
       ) %>%
-      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
+      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
       mutate(
         QueryRatio = ifelse(!is.na(TotalValues), round(totalQueries * 100 / TotalValues, 2), 0),
         FormName = as.character(FormName)
@@ -105,16 +105,16 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     formLevel[is.na(formLevel$FormName), "FormName"] <- "Event Date"
     formLevel$QueryRatio <- gsub("NA", "0", formLevel$QueryRatio)
     
-    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormName, FormSeq, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
-    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "FormSeq"))
+    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormName, FormSeq, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
+    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "SubjectSeq", "FormSeq"))
     if (!is.na(visitOrder)) {
       visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
       formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
     }
-    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence", "Total", "# of Manual and Validation Queries (Raised)", "# of Manual and Validation Queries (Resolved)", "# of Manual and Validation Queries (Rejected)", "# of Manual and Validation Queries(Approved)", "# of Manual and Validation Queries (Closed)", "# of Manual and Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
+    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence", "Total", "# of Manual and Validation Queries (Raised)", "# of Manual and Validation Queries (Resolved)", "# of Manual and Validation Queries (Rejected)", "# of Manual and Validation Queries(Approved)", "# of Manual and Validation Queries (Closed)", "# of Manual and Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
     headerForm <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Manual and Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Manual and Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
       secondLevel = c("Raised", "Resolved", "Rejected", "Approved", "Closed", "Removed", "Updates / Query", "Queries / Item", "> 7 days", "> 14 days", "> 21 days", "Resolution", "Approval")
     )
     widths <- rep(0, ncol(formLevel))
@@ -124,13 +124,13 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     #  Subject Level ----
     subjectDetails <- qry %>%
-      select(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms for respective subjects
     
-    subjectLevel <- countQueries(qry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectId'))  %>%
+    subjectLevel <- countQueries(qry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectSeq', 'SubjectId'))  %>%
       data.frame() %>%
       mutate(
         processedQries = rowSums(across(c(resolvedQueries, rejectedQueries, approvedQueries, closedQueries))),
@@ -138,15 +138,15 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
         avgResolutionTime = ifelse(is.nan(avgResolutionTime), NA, avgResolutionTime),
         avgApprovalTime = ifelse(is.nan(avgApprovalTime), NA, avgApprovalTime)
       ) %>%
-      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>% # To get the TotalValues column
+      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% # To get the TotalValues column
       mutate(QueryRatio = ifelse(!is.na(TotalValues), round(totalQueries * 100 / TotalValues, 2), 0))
     subjectLevel$QueryRatio <- gsub("NA", "0", subjectLevel$QueryRatio)
     
-    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
-    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectId"))
-    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Total", "# of Manual and Validation Queries (Raised)", "# of Manual and Validation Queries (Resolved)", "# of Manual and Validation Queries (Rejected)", "# of Manual and Validation Queries(Approved)", "# of Manual and Validation Queries (Closed)", "# of Manual and Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
+    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
+    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq", "SubjectId"))
+    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total", "# of Manual and Validation Queries (Raised)", "# of Manual and Validation Queries (Resolved)", "# of Manual and Validation Queries (Rejected)", "# of Manual and Validation Queries(Approved)", "# of Manual and Validation Queries (Closed)", "# of Manual and Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
     headerSubject <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Total", rep("# of Manual and Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total", rep("# of Manual and Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
       secondLevel = c("Raised", "Resolved", "Rejected", "Approved", "Closed", "Removed", "Updates / Query", "Queries / Item", "> 7 days", "> 14 days", "> 21 days", "Resolution", "Approval")
     )
     widths <- rep(0, ncol(subjectLevel))
@@ -270,18 +270,18 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     countryLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3:20))
     
     qry <- qry %>%
-      select(StudyName, Country, SiteCode, SiteName, QueryStudySeqNo, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, ItemName, QueryType, QueryText, QueryStatus, QueryResolution, TimeToResolution, TimeToApproval, TimeofQueryCycle, OpenQueryAge, ResolvedQueryAge, QueryRaisedBy, QueryRaised, LatestActionBy, LatestActionOn, QueryResolutionHistory) %>%
+      select(StudyName, Country, SiteCode, SiteName, QueryStudySeqNo, SubjectSeq, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, ItemName, QueryType, QueryText, QueryStatus, QueryResolution, TimeToResolution, TimeToApproval, TimeofQueryCycle, OpenQueryAge, ResolvedQueryAge, QueryRaisedBy, QueryRaised, LatestActionBy, LatestActionOn, QueryResolutionHistory) %>%
       mutate(FormName = as.character(FormName))
     qry$FormName <- ifelse(is.na(qry$FormName), "Event date", qry$FormName)
-    qry <- prepareDataForDisplay(qry, c("SiteCode", "SiteName", "QueryStudySeqNo", "EventSeq", "FormSeq"))
+    qry <- prepareDataForDisplay(qry, c("SiteCode", "SiteName", "QueryStudySeqNo", "SubjectSeq", "EventSeq", "FormSeq"))
     if (!is.na(visitOrder)) {
       visitOrder <- visitOrder[visitOrder %in% qry$EventName]
       qry$EventName <- factor(qry$EventName, levels = visitOrder)
-      qry <- qry %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+      qry <- qry %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
     }
-    qry <- setLabel(qry, list("Study", "Country", "Site Code", "Site name", "Query Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Text", "Query Status", "Query Resolution", "Time to Resolution (days)", "Time to Approval (days)", "Time of Query Cycle (days)", "Age of Open Query (days)", "Age of Resolved Query (days)", "Raised By", "Raised On", "Latest Action By", "Latest Action On", "History"))
+    qry <- setLabel(qry, list("Study", "Country", "Site Code", "Site name", "Query Sequence", "Subject Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Text", "Query Status", "Query Resolution", "Time to Resolution (days)", "Time to Approval (days)", "Time of Query Cycle (days)", "Age of Open Query (days)", "Age of Resolved Query (days)", "Raised By", "Raised On", "Latest Action By", "Latest Action On", "History"))
     headerQueries <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site name", "Query Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Text", "Query Status", "Query Resolution", rep("Time to (days)", 2), "Time of Query Cycle (days)", rep("Age of (days)", 2), "Raised By", "Raised On", "Latest Action By", "Latest Action On", "History"),
+      firstLevel = c("Study", "Country", "Site Code", "Site name", "Query Sequence", "Subject Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Text", "Query Status", "Query Resolution", rep("Time to (days)", 2), "Time of Query Cycle (days)", rep("Age of (days)", 2), "Raised By", "Raised On", "Latest Action By", "Latest Action On", "History"),
       secondLevel = c("Resolution", "Approval", "Open Query", "Resolved Query")
     )
     widths <- rep(0, ncol(qry))
