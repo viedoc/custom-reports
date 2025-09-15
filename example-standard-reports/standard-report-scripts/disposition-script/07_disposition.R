@@ -15,7 +15,7 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
   ss$SiteCode <- as.character(ss$SiteCode)
   # Get Screen failure subjects if SCRFRREP form is present in the study
   if ("ScreeningFailureState" %in% colnames(sfr)) {
-    ss <- ss %>% left_join(sfr %>% select(SiteCode, SiteName, SubjectId, ScreeningFailureState))
+    ss <- ss %>% left_join(sfr %>% select(SiteCode, SiteName, SubjectSeq, SubjectId, ScreeningFailureState))
     ss[is.na(ss$ScreeningFailureState),"ScreeningFailureState"] <- FALSE
   }
   
@@ -66,12 +66,12 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
   }
   if (itemId != "") {
     wdData[["WDREAS"]] <- wdData[[itemId]]
-    wdData <- wdData %>% filter(!is.na(WDREAS)) %>% group_by(SiteCode, SiteName, SubjectId) %>% summarise(WDREAS = paste(WDREAS, collapse=","))
+    wdData <- wdData %>% filter(!is.na(WDREAS)) %>% group_by(SiteCode, SiteName, SubjectSeq, SubjectId) %>% summarise(WDREAS = paste(WDREAS, collapse=","))
   } else wdData <- data.frame()
   
   # Get Subject Status
   if (ncol(wdData) > 0) {
-    ss <- ss %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectId")) %>% mutate(WDREAS = ifelse(is.na(WDREAS), "", WDREAS))
+    ss <- ss %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% mutate(WDREAS = ifelse(is.na(WDREAS), "", WDREAS))
   } else ss$WDREAS <- ""
   # If 'SCRFRREP' form present in study, Screen failure logic is used from the form else old logic is retained
   if ("ScreeningFailureState" %in% colnames(ss)) {
@@ -109,11 +109,11 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
         )
       )
   }
-  ss <- ss %>% select(SiteCode, SiteName, SubjectId, SubjectStatus)
+  ss <- ss %>% select(SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus)
   ed <- ed %>% 
-    left_join(ss, by = c("SiteCode", "SiteName", "SubjectId")) %>%
+    left_join(ss, by = c("SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>%
     mutate(EventInitiatedDate = substr(EventInitiatedDate,1,10)) %>% 
-    select(StudyName, CountryCode, Country, SiteCode, SiteName, SubjectId, EventId, EventName, EventRepeatKey, EventInitiatedDate, SubjectStatus)
+    select(StudyName, CountryCode, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventId, EventName, EventRepeatKey, EventInitiatedDate, SubjectStatus)
   
   # Handle duplicate site codes
   duplicateSiteCodes <- any(duplicated(params$UserDetails$sites$siteCode))
@@ -173,10 +173,10 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
   
   # Make EventName unique
   ed <- ed %>% 
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventRepeatKey, SubjectStatus, EventNameTrunc) %>%
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventRepeatKey, SubjectStatus, EventNameTrunc) %>%
     summarise(EventInitiatedDate = min(EventInitiatedDate, na.rm = TRUE)) %>% 
     ungroup()%>%
-    group_by(SiteCode, SubjectId, EventName) %>%
+    group_by(SiteCode, SubjectSeq, SubjectId, EventName) %>%
     mutate(VisitFreq = n()) %>%
     ungroup() %>%
     group_by(EventName) %>% 
@@ -207,7 +207,7 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
     spread(EventName, EventInitiatedDate, fill = "") %>%
     select(-SubjectStatus, SubjectStatus)
   lbls <- as.list(colnames(eventDetails))
-  lbls[1:5] <- c("Study", "Country", "Site Code", "Site Name", "Subject")
+  lbls[1:6] <- c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject")
   lbls[length(lbls)] <- "Subject Status"
   eventDetails <- prepareDataForDisplay(eventDetails, c("SiteCode", "SiteName"))
   eventDetails <- setLabel(eventDetails, lbls)
