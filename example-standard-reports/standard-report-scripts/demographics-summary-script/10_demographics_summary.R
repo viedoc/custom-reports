@@ -11,7 +11,7 @@ if (nrow(dm) == 0) {
   } else {
   dm <- dm %>%
     mutate(STATUS = ifelse(CompletedState == T, "Completed", ifelse(WithdrawnState == T, "Withdrawn", ifelse(ScreenedState == T, "Ongoing", "Candidate"))), ENROLLED = ifelse(EnrolledState, "Yes", "No"), SiteOID = paste(SiteCode, SiteName)) %>%
-    select(SubjectId, SiteOID, STATUS, ENROLLED)
+    select(SubjectSeq, SubjectId, SiteOID, STATUS, ENROLLED)
   
   # Get Demographic Characteristics
   plotConfiguration <- data.frame()
@@ -59,21 +59,21 @@ if (nrow(dm) == 0) {
         if ("EventDate" %in% colnames(data)) {
           data <- data %>% 
             filter_(paste0("!is.na(",Field,") & ",Field," != ''")) %>% 
-            group_by(SubjectId) %>%
+            group_by(SubjectSeq, SubjectId) %>%
             arrange(desc(EventDate)) %>%
             filter(row_number() == 1) %>%
-            select(c("SubjectId", all_of(Field))) %>% 
+            select(c("SubjectSeq", "SubjectId", all_of(Field))) %>% 
             ungroup() # One record per subject
         }
         else {
           data <- data %>% 
             filter_(paste0("!is.na(",Field,") & ",Field," != ''")) %>% 
-            select(c("SubjectId", all_of(Field))) %>% 
-            group_by(SubjectId) %>%
+            select(c("SubjectSeq", "SubjectId", all_of(Field))) %>% 
+            group_by(SubjectSeq, SubjectId) %>%
             filter(row_number() == n()) %>%
             ungroup() # One record per subject
         }
-        dm <- dm %>% left_join(data, by = "SubjectId")
+        dm <- dm %>% left_join(data, by = c("SubjectSeq", "SubjectId"))
       }
       rm(data)
     }
