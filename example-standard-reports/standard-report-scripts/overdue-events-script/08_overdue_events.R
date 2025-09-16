@@ -68,13 +68,13 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
         )
       )
     ) %>%
-    select(SiteCode, SiteName, SubjectId, SubjectStatus)
+    select(SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus)
   ssOrder <- c("Candidate", "Ongoing", "Completed", "Withdrawn")
   
   # Calculate the overdue in days
   dod <- substr(params$dateOfDownload, 1, 10)
   eventLevel <- ed %>% 
-    left_join(ss, by = c("SiteCode", "SiteName", "SubjectId")) %>% 
+    left_join(ss, by = c("SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% 
     filter(!is.na(EventWindowEndDate) & is.na(EventInitiatedDate) & is.na(EventPlannedDate) & !is.na(EventProposedDate)) %>%
     mutate(
       overdueSince = as.integer(difftime(dod, EventWindowEndDate, units = "days")),
@@ -83,45 +83,45 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
       EventWindowEndDate = substr(EventWindowEndDate, 1, 10)
     ) %>% 
     filter(EventProposedDate <= dod) %>%
-    select(StudyName, Country, SiteCode, SiteName, SubjectId, SubjectStatus, EventName, EventRepeatKey, EventProposedDate, EventWindowStartDate, EventWindowEndDate, overdueSince)
+    select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus, EventName, EventRepeatKey, EventProposedDate, EventWindowStartDate, EventWindowEndDate, overdueSince)
   
   # Event (Overdue Events - past) ----
   eventLevelOverdue <- eventLevel %>% filter(overdueSince >= 0)
-  eventLevelOverdue <- prepareDataForDisplay(eventLevelOverdue, c("SiteCode", "SiteName", "EventRepeatKey"))
+  eventLevelOverdue <- prepareDataForDisplay(eventLevelOverdue, c("SiteCode", "SiteName", "SubjectSeq", "EventRepeatKey"))
   ssOrder_ <- ssOrder[ssOrder %in% eventLevelOverdue$SubjectStatus]
   eventLevelOverdue$SubjectStatus <- factor(eventLevelOverdue$SubjectStatus, levels = ssOrder_)
   
   visitOrder_ <- visitOrder[visitOrder %in% eventLevelOverdue$EventName]
   eventLevelOverdue$EventName <- factor(eventLevelOverdue$EventName, levels = visitOrder_)
-  eventLevelOverdue <- eventLevelOverdue %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, .by_group = TRUE)
+  eventLevelOverdue <- eventLevelOverdue %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, .by_group = TRUE)
   
-  eventLevelOverdue <- setLabel(eventLevelOverdue, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event", "Event Sequence", "Event Proposed Date", "Event Window Start Date", "Event Window End Date", "Overdue since (days)"))
+  eventLevelOverdue <- setLabel(eventLevelOverdue, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event", "Event Sequence", "Event Proposed Date", "Event Window Start Date", "Event Window End Date", "Overdue since (days)"))
   widths <- rep(0, ncol(eventLevelOverdue))
   eventLevelOverdueColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 8, 9, 10, 11))
   
   # Event (Overdue Events - future) ----
   eventLevelOverdueFuture <- eventLevel %>% filter(overdueSince < 0) %>% mutate(overdueIn = -1 * overdueSince) %>% select(-overdueSince)
-  eventLevelOverdueFuture <- prepareDataForDisplay(eventLevelOverdueFuture, c("SiteCode", "SiteName", "EventRepeatKey"))
+  eventLevelOverdueFuture <- prepareDataForDisplay(eventLevelOverdueFuture, c("SiteCode", "SiteName", "SubjectSeq", "EventRepeatKey"))
   ssOrder_ <- ssOrder[ssOrder %in% eventLevelOverdueFuture$SubjectStatus]
   eventLevelOverdueFuture$SubjectStatus <- factor(eventLevelOverdueFuture$SubjectStatus, levels = ssOrder_)
   
   visitOrder_ <- visitOrder[visitOrder %in% eventLevelOverdueFuture$EventName]
   eventLevelOverdueFuture$EventName <- factor(eventLevelOverdueFuture$EventName, levels = visitOrder_)
-  eventLevelOverdueFuture <- eventLevelOverdueFuture %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, .by_group = TRUE)
+  eventLevelOverdueFuture <- eventLevelOverdueFuture %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, .by_group = TRUE)
   
-  eventLevelOverdueFuture <- setLabel(eventLevelOverdueFuture, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event", "Event Sequence", "Event Proposed Date", "Event Window Start Date", "Event Window End Date", "Overdue in (days)"))
+  eventLevelOverdueFuture <- setLabel(eventLevelOverdueFuture, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event", "Event Sequence", "Event Proposed Date", "Event Window Start Date", "Event Window End Date", "Overdue in (days)"))
   widths <- rep(0, ncol(eventLevelOverdueFuture))
   eventLevelOverdueFutureColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 8, 9, 10, 11))
   
   # Subject level ----
   subjectLevel <- eventLevelOverdue %>%
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId, SubjectStatus) %>%
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus) %>%
     summarise(numEventsOverdue = n()) %>% 
     data.frame()
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"))
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"))
   ssOrder_ <- ssOrder[ssOrder %in% subjectLevel$SubjectStatus]
   subjectLevel$SubjectStatus <- factor(subjectLevel$SubjectStatus, levels = ssOrder_)
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "# of overdue events"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "# of overdue events"))
   widths <- rep(0, ncol(subjectLevel))
   subjectLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3))
   
