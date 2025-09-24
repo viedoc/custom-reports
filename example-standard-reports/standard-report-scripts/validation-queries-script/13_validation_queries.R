@@ -68,7 +68,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
     ed <- ed %>%
       filter(!is.na(EventInitiatedDate)) %>%
-      select(Country, SiteName, SiteCode, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1], FormId = NA, FormSeq = NA, Total_filled = 1)
     ss <- ss %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
@@ -85,13 +85,13 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     # Form Level ----
     formDetails <- valQry %>%
-      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormSeq")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormSeq")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms
     
-    formLevel <- countValQueries(valQry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
+    formLevel <- countValQueries(valQry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
       data.frame() %>%
       mutate(
         processedQries = rowSums(across(c(resolvedQueries, rejectedQueries, approvedQueries, closedQueries))),
@@ -99,7 +99,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
         avgResolutionTime = ifelse(is.nan(avgResolutionTime), NA, avgResolutionTime),
         avgApprovalTime = ifelse(is.nan(avgApprovalTime), NA, avgApprovalTime)
       ) %>%
-      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
+      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
       mutate(
         QueryRatio = ifelse(!is.na(TotalValues), round(totalQueries * 100 / TotalValues, 2), 0),
         FormName = as.character(FormName)
@@ -107,16 +107,16 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     formLevel[is.na(formLevel$FormName), "FormName"] <- "Event Date"
     formLevel$QueryRatio <- gsub("NA", "0", formLevel$QueryRatio)
     
-    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormName, FormSeq, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
-    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "FormSeq"))
+    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormName, FormSeq, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
+    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "FormSeq", "EventSeq", "SubjectSeq"))
     if (!is.na(visitOrder)) {
       visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
       formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
     }
-    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence", "Total", "# of Validation Queries (Raised)", "# of Validation Queries (Resolved)", "# of Validation Queries (Rejected)", "# of Validation Queries (Approved)", "# of Validation Queries (Closed)", "# of Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
+    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence", "Total", "# of Validation Queries (Raised)", "# of Validation Queries (Resolved)", "# of Validation Queries (Rejected)", "# of Validation Queries (Approved)", "# of Validation Queries (Closed)", "# of Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
     headerForm <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
       secondLevel = c("Raised", "Resolved", "Rejected", "Approved", "Closed", "Removed", "Updates / Query", "Queries / Item", "> 7 days", "> 14 days", "> 21 days", "Resolution", "Approval")
     )
     widths <- rep(0, ncol(formLevel))
@@ -126,13 +126,13 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     # Subject Level ----
     subjectDetails <- valQry %>%
-      select(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms for respective subjects
     
-    subjectLevel <- countValQueries(valQry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectId')) %>%  
+    subjectLevel <- countValQueries(valQry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectSeq', 'SubjectId')) %>%  
       data.frame() %>%
       mutate(
         processedQries = rowSums(across(c(resolvedQueries, rejectedQueries, approvedQueries, closedQueries))),
@@ -140,15 +140,15 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
         avgResolutionTime = ifelse(is.nan(avgResolutionTime), NA, avgResolutionTime),
         avgApprovalTime = ifelse(is.nan(avgApprovalTime), NA, avgApprovalTime)
       ) %>%
-      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>% # To get the TotalValues column
+      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% # To get the TotalValues column
       mutate(QueryRatio = ifelse(!is.na(TotalValues), round(totalQueries * 100 / TotalValues, 2), 0))
     subjectLevel$QueryRatio <- gsub("NA", "0", subjectLevel$QueryRatio)
     
-    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
-    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectId"))
-    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Total", "# of Validation Queries (Raised)", "# of Validation Queries (Resolved)", "# of Validation Queries (Rejected)", "# of Validation Queries (Approved)", "# of Validation Queries (Closed)", "# of Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
+    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, totalQueries, openQueries, resolvedQueries, rejectedQueries, approvedQueries, closedQueries, removedQueries, updatedQueries, updatesRatio, QueryRatio, qriesOpenGrt7, qriesOpenGrt14, qriesOpenGrt21, avgResolutionTime, avgApprovalTime)
+    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq", "SubjectId"))
+    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total", "# of Validation Queries (Raised)", "# of Validation Queries (Resolved)", "# of Validation Queries (Rejected)", "# of Validation Queries (Approved)", "# of Validation Queries (Closed)", "# of Validation Queries (Removed)", "Resulting in Data Changes", "Updates / Query %", "Queries / Item %", "# of Queries Open > 7 days", "# of Queries Open > 14 days", "# of Queries Open > 21 days", "Average Time to Resolution (days)", "Average Time to Approval (days)"))
     headerSubject <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Total", rep("# of Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total", rep("# of Validation Queries", 6), "Resulting in Data Changes", rep("Ratio (%)", 2), rep("# of Queries Open", 3), rep("Average time to (days)", 2)),
       secondLevel = c("Raised", "Resolved", "Rejected", "Approved", "Closed", "Removed", "Updates / Query", "Queries / Item", "> 7 days", "> 14 days", "> 21 days", "Resolution", "Approval")
     )
     widths <- rep(0, ncol(subjectLevel))

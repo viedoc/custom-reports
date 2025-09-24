@@ -17,9 +17,9 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
     if (nrow(qry) > 0) {
       qry <- qry %>% 
         filter(QueryType =="Unconfirmed missing data" | QueryStatus == "Query Raised") %>% 
-        select(Country, SiteName, SiteCode, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq) %>%
+        select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq) %>%
         mutate(QueryStatus = "Query Raised", EventSeq = as.character(EventSeq)) %>% distinct()
-      rs <- rs %>% left_join(qry, by =c("Country","SiteName", "SiteCode", "SubjectId","EventSeq","EventId", "EventName", "ActivityId", "ActivityName", "FormName", "FormSeq"))
+      rs <- rs %>% left_join(qry, by =c("Country","SiteName", "SiteCode", "SubjectSeq", "SubjectId","EventSeq","EventId", "EventName", "ActivityId", "ActivityName", "FormName", "FormSeq"))
     }
     else {
       rs <- rs %>% mutate(QueryStatus = NA)
@@ -32,11 +32,11 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
                         ifelse(!is.na(SignBy), "Yes", "No"),
                         ifelse(SignBy == "N/A", "N/A", ""))
       ) %>% 
-      select(Country, SiteName, SiteCode, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
   }
   if(nrow(pf) > 0) {
     pf <- pf %>% 
-      select(Country, SiteName, SiteCode, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName) %>% 
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName) %>% 
       mutate(EventSeq = as.character(EventSeq), Initiated = "No", Completed = "", Signed = "", FormSeq = NA)
   }
   fs <- rbind(rs, pf) %>% mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
@@ -90,27 +90,27 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
         )
       )
     ) %>%
-    select(Country, SiteCode, SiteName, SubjectId, SubjectStatus)
+    select(Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus)
   ssOrder <- c("Candidate", "Ongoing", "Completed", "Withdrawn")
   
   # Form level ----
   formLevel <- fs %>% 
-    left_join(ss, by = c("Country", "SiteCode", "SiteName", "SubjectId")) %>% 
-    select(StudyName, Country, SiteCode, SiteName, SubjectId, SubjectStatus, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
+    left_join(ss, by = c("Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% 
+    select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
   formLevel$SubjectStatus <- factor(formLevel$SubjectStatus, levels = ssOrder)
-  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "FormSeq"), retainFactor = c("EventName","SubjectStatus"))
+  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"), retainFactor = c("EventName","SubjectStatus"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Initiated", "Completed", "Signed"))
+  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Initiated", "Completed", "Signed"))
   widths <- rep(0, ncol(formLevel))
   formLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 8, 12))
   
   # Event level ----
   eventLevel <- formLevel %>% 
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId, SubjectStatus, EventName, EventSeq) %>% 
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus, EventName, EventSeq) %>% 
     summarize(
       Triggered = n(),
       countInitiated = sum(Initiated == "Yes"),
@@ -128,8 +128,8 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
     eventLevel <- eventLevel %>% group_by(StudyName, Country, SiteCode, SiteName) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
   eventLevel$SubjectStatus <- factor(eventLevel$SubjectStatus, levels = ssOrder)
-  eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName", "EventSeq"), retainFactor = c("EventName","SubjectStatus"))
-  eventLevel <- setLabel(eventLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event", "Event Sequence", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
+  eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq"), retainFactor = c("EventName","SubjectStatus"))
+  eventLevel <- setLabel(eventLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event", "Event Sequence", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
   headerEvent <- list(
     firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event","Event Sequence", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
     secondLevel = c("Initiated", "Pending", "Completed", "Saved with issues", "Signed", "Not signed")
@@ -139,7 +139,7 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
   
   # Subject level ----
   subjectLevel <- formLevel %>% 
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId, SubjectStatus) %>% 
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus) %>% 
     summarize(
       Triggered = n(),
       countInitiated = sum(Initiated == "Yes"),
@@ -152,8 +152,8 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
     ) %>% 
     data.frame()
   subjectLevel$SubjectStatus <- factor(subjectLevel$SubjectStatus, levels = ssOrder)
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"), retainFactor = c("SubjectStatus"))
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"), retainFactor = c("SubjectStatus"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
   headerSubject <- list(
     firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
     secondLevel = c("Initiated", "Pending", "Completed", "Saved with issues", "Signed", "Not signed")

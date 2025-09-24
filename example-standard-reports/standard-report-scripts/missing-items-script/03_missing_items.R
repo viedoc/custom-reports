@@ -36,15 +36,15 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
   
   # Item Level
-  itemLevel <- qry %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ItemName, QueryType, QueryStatus, QueryResolutionHistory)
+  itemLevel <- qry %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ItemName, QueryType, QueryStatus, QueryResolutionHistory)
   itemLevel$QueryResolutionHistory <- sapply(as.character(itemLevel$QueryResolutionHistory), function(x) unlist(strsplit(x, "QueryResolved:"))[2])
-  itemLevel <- prepareDataForDisplay(itemLevel, c("SiteCode", "SiteName", "EventSeq", "FormSeq"))
+  itemLevel <- prepareDataForDisplay(itemLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% itemLevel$EventName]
     itemLevel$EventName <- factor(itemLevel$EventName, levels = visitOrder)
-    itemLevel <- itemLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    itemLevel <- itemLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  itemLevel <- setLabel(itemLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Event", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Status", "Query Resolution History"))
+  itemLevel <- setLabel(itemLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Event", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Item", "Query Type", "Query Status", "Query Resolution History"))
   widths <- rep(0, ncol(itemLevel))
   widths[2] <- 105
   widths[5] <- 90
@@ -55,7 +55,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
   if (nrow(ed) > 0) {
     # Get event's Initiated date for Form level MAX Days calculation
     ed <- ed %>% 
-      select(SiteCode, SiteName, SubjectId, EventName, EventSeq = EventRepeatKey, EventDate = EventInitiatedDate, InitiatedDate) %>% 
+      select(SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq = EventRepeatKey, EventDate = EventInitiatedDate, InitiatedDate) %>% 
       mutate(EventDate = substr(EventDate, 1, 10), InitiatedDate = substr(InitiatedDate, 1, 10), EventSeq = as.character(EventSeq))
     formLevel <- formLevel %>% 
       left_join(ed) %>% 
@@ -71,7 +71,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     formLevel <- formLevel %>% mutate(MAXDAYS = NA, InitiatedDate = "")
   }
   formLevel <- formLevel %>%
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, InitiatedDate, MAXDAYS, QueryType) %>%
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, InitiatedDate, MAXDAYS, QueryType) %>%
     summarize(Freq = n()) %>%
     ungroup() %>%
     spread(QueryType, Freq)
@@ -79,14 +79,14 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
   if (!has_name(formLevel, "Unconfirmed missing data")) formLevel[["Unconfirmed missing data"]] <- rep(0, nrow(formLevel))
   formLevel[["Missing data"]][is.na(formLevel[["Missing data"]])] <- 0
   formLevel[["Unconfirmed missing data"]][is.na(formLevel[["Unconfirmed missing data"]])] <- 0
-  formLevel <- formLevel %>% rename(CONFMISS = `Missing data`, UNCONFMISS = `Unconfirmed missing data`) %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, InitiatedDate, MAXDAYS, UNCONFMISS, CONFMISS)
-  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "FormSeq"))
+  formLevel <- formLevel %>% rename(CONFMISS = `Missing data`, UNCONFMISS = `Unconfirmed missing data`) %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, InitiatedDate, MAXDAYS, UNCONFMISS, CONFMISS)
+  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Event", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Missing since", "Days missing", "# Unconfirmed <br>missing items", "# Confirmed <br>missing items"))
+  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Event", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Missing since", "Days missing", "# Unconfirmed <br>missing items", "# Confirmed <br>missing items"))
   widths <- rep(0, ncol(formLevel))
   widths[2] <- 105
   widths[5] <- 90
@@ -95,7 +95,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
   # Event Level
   eventLevel <- formLevel %>%
     group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq) %>%
-    summarize(FreqSubjects = length(unique(SubjectId)), FreqForms = n(), UNCONFMISS = sum(UNCONFMISS), CONFMISS = sum(CONFMISS))
+    summarize(FreqSubjects = length(unique(interaction(SubjectSeq, SubjectId))), FreqForms = n(), UNCONFMISS = sum(UNCONFMISS), CONFMISS = sum(CONFMISS))
   eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% eventLevel$EventName]
@@ -109,10 +109,10 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
   
   # Subject Level
   subjectLevel <- formLevel %>%
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+    group_by(StudyName, Country, SiteCode, SiteName,SubjectSeq, SubjectId) %>%
     summarize(FreqForms = n(), UNCONFMISS = sum(UNCONFMISS), CONFMISS = sum(CONFMISS))
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"))
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "# Forms with <br>missing items", "# Unconfirmed <br>missing items", "# Confirmed <br>missing items"))
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject Seqeuence", "Subject", "# Forms with <br>missing items", "# Unconfirmed <br>missing items", "# Confirmed <br>missing items"))
   widths <- rep(0, ncol(subjectLevel))
   widths[2] <- 105
   widths[5] <- 90

@@ -18,7 +18,7 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
     ed$SiteCode <- as.character(ed$SiteCode)
     # Get Screen failure subjects if SCRFRREP form is present in the study
     if ("ScreeningFailureState" %in% colnames(sfr)) {
-      ss <- ss %>% left_join(sfr %>% select(SiteCode, SiteName, SubjectId, ScreeningFailureState))
+      ss <- ss %>% left_join(sfr %>% select(SiteCode, SiteName, SubjectSeq, SubjectId, ScreeningFailureState))
       ss[is.na(ss$ScreeningFailureState),"ScreeningFailureState"] <- FALSE
     }
     
@@ -69,7 +69,7 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
       }
     if (itemId != "") {
       wdData[["WDREAS"]] <- wdData[[itemId]]
-      wdData <- wdData %>% filter(!is.na(WDREAS)) %>% group_by(SiteCode, SiteName, SubjectId) %>% summarise(WDREAS = paste(WDREAS, collapse=","))
+      wdData <- wdData %>% filter(!is.na(WDREAS)) %>% group_by(SiteCode, SiteName, SubjectSeq, SubjectId) %>% summarise(WDREAS = paste(WDREAS, collapse=","))
       } else wdData <- data.frame()
   
     # Calculate required fields
@@ -95,10 +95,10 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
   
     # Subject level
     subjectlevel <- ss %>%
-      select(StudyName, Country, SiteCode, SiteName, SubjectId, SCREENED, ENROLLED, CANDIDATE, ONGOING, COMPLETED, WITHDRAWN)
-    if (ncol(wdData) > 0) subjectlevel <- subjectlevel %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectId"))
-    subjectlevel <- prepareDataForDisplay(subjectlevel, c("SiteCode", "SiteName"))
-    lbls <- list("Study", "Country", "Site Code", "Site Name", "Subject", "Screened", "Enrolled", "Candidate (Added, not yet screened)", "Ongoing", "Completed", "Withdrawn")
+      select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SCREENED, ENROLLED, CANDIDATE, ONGOING, COMPLETED, WITHDRAWN)
+    if (ncol(wdData) > 0) subjectlevel <- subjectlevel %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectSeq", "SubjectId"))
+    subjectlevel <- prepareDataForDisplay(subjectlevel, c("SiteCode", "SiteName", "SubjectSeq"))
+    lbls <- list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Screened", "Enrolled", "Candidate (Added, not yet screened)", "Ongoing", "Completed", "Withdrawn")
     if (ncol(wdData) > 0) lbls <- append(lbls, "Reason for withdrawal")
     subjectlevel <- setLabel(subjectlevel, lbls)
     widths <- rep(0, ncol(subjectlevel))
@@ -106,16 +106,16 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
     widths[5] <- 90
     widths[6:11] <- 60
     subjectLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3))
-    colnms <- c("Study", "Country", "Site Code", "Site Name", "Subject", "Screened", "Enrolled", "Candidate", "Ongoing", "Completed", "Withdrawn")
+    colnms <- c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Screened", "Enrolled", "Candidate", "Ongoing", "Completed", "Withdrawn")
     if (ncol(wdData) > 0) colnms <- append(colnms, "Reason for withdrawal")
     headerSubject <- list(firstLevel = colnms)
   
     # Subject level (with dates)
     subjectlevelWithDate <- ss %>%
-      select(StudyName, Country, SiteCode, SiteName, SubjectId, SCREENED, SCREENEDDATE, ENROLLED, ENROLLEDDATE, CANDIDATE, ONGOING, COMPLETED, COMPLETEDDATE, WITHDRAWN, WITHDRAWNDATE)
-    if (ncol(wdData) > 0) subjectlevelWithDate <- subjectlevelWithDate %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectId"))
-    subjectlevelWithDate <- prepareDataForDisplay(subjectlevelWithDate, c("SiteCode", "SiteName"))
-    lbls <- list("Study", "Country", "Site Code", "Site Name", "Subject", "Screened", "Screened Date", "Enrolled", "Enrolled Date", "Candidate (Added, not yet screened)", "Ongoing", "Completed", "Completed Date", "Withdrawn", "Withdrawn Date")
+      select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SCREENED, SCREENEDDATE, ENROLLED, ENROLLEDDATE, CANDIDATE, ONGOING, COMPLETED, COMPLETEDDATE, WITHDRAWN, WITHDRAWNDATE)
+    if (ncol(wdData) > 0) subjectlevelWithDate <- subjectlevelWithDate %>% left_join(wdData, by = c("SiteCode", "SiteName", "SubjectSeq", "SubjectId"))
+    subjectlevelWithDate <- prepareDataForDisplay(subjectlevelWithDate, c("SiteCode", "SiteName", "SubjectSeq"))
+    lbls <- list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Screened", "Screened Date", "Enrolled", "Enrolled Date", "Candidate (Added, not yet screened)", "Ongoing", "Completed", "Completed Date", "Withdrawn", "Withdrawn Date")
     if (ncol(wdData) > 0) lbls <- append(lbls, "Reason for withdrawal")
     subjectlevelWithDate <- setLabel(subjectlevelWithDate, lbls)
     widths <- rep(0, ncol(subjectlevelWithDate))
@@ -123,7 +123,7 @@ if (ncol(ss) == 0 || nrow(ss) == 0) {
     widths[5] <- 90
     widths[c(6,8,10,11,12,14)] <- 60
     subjectLevelWithDateColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3,7,9,13,15))
-    colnms <- c("Study", "Country", "Site Code", "Site Name", "Subject", "Screened", "Screened Date", "Enrolled", "Enrolled Date", "Candidate", "Ongoing", "Completed", "Completed Date", "Withdrawn", "Withdrawn Date")
+    colnms <- c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Screened", "Screened Date", "Enrolled", "Enrolled Date", "Candidate", "Ongoing", "Completed", "Completed Date", "Withdrawn", "Withdrawn Date")
     if (ncol(wdData) > 0) colnms <- append(colnms, "Reason for withdrawal")
     headerSubjectWithDate <- list(firstLevel = colnms)
   

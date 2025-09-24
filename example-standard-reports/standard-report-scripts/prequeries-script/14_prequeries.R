@@ -72,7 +72,7 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
     ed <- ed %>%
       filter(!is.na(EventInitiatedDate)) %>%
-      select(Country, SiteName, SiteCode, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq = EventRepeatKey, EventId) %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1], FormId = NA, FormSeq = NA, Total_filled = 1)
     ss <- ss %>%
       mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
@@ -92,16 +92,16 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     # Form Level ----
     formDetails <- preqry %>%
-      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormSeq")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormId, FormName, FormSeq) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormSeq")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormId, FormName, FormSeq) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms
     
-    formLevel <- countPreQueries(preqry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
+    formLevel <- countPreQueries(preqry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'EventName', 'EventSeq', 'SubjectSeq', 'SubjectId', 'FormId', 'FormName', 'FormSeq')) %>%
       data.frame() %>%
       mutate(avgReleaseTime = ifelse(is.nan(avgReleaseTime), NA, avgReleaseTime)) %>% 
-      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
+      left_join(formDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "EventName", "EventSeq", "SubjectSeq", "SubjectId", "FormId", "FormName", "FormSeq")) %>% # To get the TotalValues column
       mutate(
         PrequeryRatio = ifelse(!is.na(TotalValues), round(totalPreqries * 100 / TotalValues, 2), 0),
         FormName = as.character(FormName)
@@ -109,16 +109,16 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     formLevel[is.na(formLevel$FormName), "FormName"] <- "Event Date"
     formLevel$PrequeryRatio <- gsub("NA", "0", formLevel$PrequeryRatio)
     
-    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectId, FormName, FormSeq, totalPreqries, openPreqries, rejectedPreqries, promotedPreqries, releasedPreqries, removedPreqries, updatedPreqries, updatesRatio, releaseRatio, modifiedRatio, PrequeryRatio, notReleasedGrt7, notReleasedGrt14, notReleasedGrt21, avgReleaseTime)
-    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "FormSeq"))
+    formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, SubjectSeq, SubjectId, FormName, FormSeq, totalPreqries, openPreqries, rejectedPreqries, promotedPreqries, releasedPreqries, removedPreqries, updatedPreqries, updatesRatio, releaseRatio, modifiedRatio, PrequeryRatio, notReleasedGrt7, notReleasedGrt14, notReleasedGrt21, avgReleaseTime)
+    formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "SubjectSeq", "FormSeq"))
     if (!is.na(visitOrder)) {
       visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
       formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+      formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
     }
-    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence",  "Total",  "# of Pre-queries (Raised)", "# of Pre-queries (Rejected)", "# of Pre-queries (Promoted)", "# of Pre-queries (Released)", "# of Pre-queries (Removed)", "Resulting in Data Changes", "Updates / Pre-query %", "Released / Pre-query %", "Modification / Pre-query %", "Pre-queries / Item %", "# of Pre-queries not Released > 7 days", "# of Pre-queries not Released > 14 days", "# of Pre-queries not Released > 21 days", "Average Time to Release (days)"))
+    formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence",  "Total",  "# of Pre-queries (Raised)", "# of Pre-queries (Rejected)", "# of Pre-queries (Promoted)", "# of Pre-queries (Released)", "# of Pre-queries (Removed)", "Resulting in Data Changes", "Updates / Pre-query %", "Released / Pre-query %", "Modification / Pre-query %", "Pre-queries / Item %", "# of Pre-queries not Released > 7 days", "# of Pre-queries not Released > 14 days", "# of Pre-queries not Released > 21 days", "Average Time to Release (days)"))
     headerForm <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Pre-queries", 5), "Resulting in Data Changes", rep("Ratio (%)", 4), rep("# of Pre-queries not Released", 3), "Average Time to Release (days)"),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Event", "Event Sequence", "Subject Sequence", "Subject", "Form", "Form Sequence", "Total", rep("# of Pre-queries", 5), "Resulting in Data Changes", rep("Ratio (%)", 4), rep("# of Pre-queries not Released", 3), "Average Time to Release (days)"),
       secondLevel = c("Raised", "Rejected", "Promoted", "Released", "Removed", "Updates / Pre-query", "Released / Pre-query",  "Modification / Pre-query", "Pre-queries / Item", "> 7 days", "> 14 days", "> 21 days")
     )
     widths <- rep(0, ncol(formLevel))
@@ -128,24 +128,24 @@ if (ncol(qry) == 0 || nrow(qry) == 0) {
     
     # Subject Level ----
     subjectDetails <- preqry %>%
-      select(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       unique() %>%
-      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>%
-      group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+      left_join(edcRecords, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>%
+      group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
       summarise(TotalValues = sum(Total_filled)) # To calculate number of entered items in all the Forms for respective subjects
     
-    subjectLevel <- countPreQueries(preqry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectId')) %>%  
+    subjectLevel <- countPreQueries(preqry, c('StudyName', 'Country', 'SiteCode', 'SiteName', 'SubjectSeq', 'SubjectId')) %>%  
       data.frame() %>%
       mutate(avgReleaseTime = ifelse(is.nan(avgReleaseTime), NA, avgReleaseTime)) %>% 
-      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectId")) %>% # To get the TotalValues column
+      left_join(subjectDetails, by = c("StudyName", "Country", "SiteCode", "SiteName", "SubjectSeq", "SubjectId")) %>% # To get the TotalValues column
       mutate(PrequeryRatio = ifelse(!is.na(TotalValues), round(totalPreqries * 100 / TotalValues, 2), 0))
     subjectLevel$PrequeryRatio <- gsub("NA", "0", subjectLevel$PrequeryRatio)
     
-    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, totalPreqries, openPreqries, rejectedPreqries, promotedPreqries, releasedPreqries, removedPreqries, updatedPreqries, updatesRatio, releaseRatio, modifiedRatio, PrequeryRatio, notReleasedGrt7, notReleasedGrt14, notReleasedGrt21, avgReleaseTime)
-    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectId"))
-    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject", "Total",  "# of Pre-queries (Raised)", "# of Pre-queries (Rejected)", "# of Pre-queries (Promoted)", "# of Pre-queries (Released)", "# of Pre-queries (Removed)", "Resulting in Data Changes", "Updates / Pre-query %", "Released / Pre-query %", "Modification / Pre-query %", "Pre-queries / Item %", "# of Pre-queries not Released > 7 days", "# of Pre-queries not Released > 14 days", "# of Pre-queries not Released > 21 days", "Average Time to Release (days)"))
+    subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, totalPreqries, openPreqries, rejectedPreqries, promotedPreqries, releasedPreqries, removedPreqries, updatedPreqries, updatesRatio, releaseRatio, modifiedRatio, PrequeryRatio, notReleasedGrt7, notReleasedGrt14, notReleasedGrt21, avgReleaseTime)
+    subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq", "SubjectId"))
+    subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total",  "# of Pre-queries (Raised)", "# of Pre-queries (Rejected)", "# of Pre-queries (Promoted)", "# of Pre-queries (Released)", "# of Pre-queries (Removed)", "Resulting in Data Changes", "Updates / Pre-query %", "Released / Pre-query %", "Modification / Pre-query %", "Pre-queries / Item %", "# of Pre-queries not Released > 7 days", "# of Pre-queries not Released > 14 days", "# of Pre-queries not Released > 21 days", "Average Time to Release (days)"))
     headerSubject <- list(
-      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Total", rep("# of Pre-queries", 5), "Resulting in Data Changes", rep("Ratio (%)", 4), rep("# of Pre-queries not Released", 3), "Average Time to Release (days)"),
+      firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Total", rep("# of Pre-queries", 5), "Resulting in Data Changes", rep("Ratio (%)", 4), rep("# of Pre-queries not Released", 3), "Average Time to Release (days)"),
       secondLevel = c("Raised", "Rejected", "Promoted", "Released", "Removed", "Updates / Pre-query", "Released / Pre-query",  "Modification / Pre-query", "Pre-queries / Item", "> 7 days", "> 14 days", "> 21 days")
     )
     widths <- rep(0, ncol(subjectLevel))

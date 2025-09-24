@@ -32,33 +32,33 @@ if (ncol(pf) == 0 || nrow(pf) == 0) {
   pf <- pf %>%
     mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
   
-  pf <- pf %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, PendingSince) %>% filter(!is.na(PendingSince)) %>% mutate(PendingSince = substr(as.character(PendingSince), 1, 10))
+  pf <- pf %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, PendingSince) %>% filter(!is.na(PendingSince)) %>% mutate(PendingSince = substr(as.character(PendingSince), 1, 10))
   
   # Form level ----
   formLevel <- pf %>% mutate(DaysPending = difftime(Sys.Date(), PendingSince, units = "days"))
-  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq"))
+  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Pending since", "Days pending"))
+  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Pending since", "Days pending"))
   widths <- rep(0, ncol(formLevel))
   widths[2] <- 105
   widths[5] <- 90
   formLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 7, 11))
   
   # Subject level ----
-  subjectLevel <- pf %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% summarize(FormCount = n(), PendingSince = min(PendingSince, na.rm = T), DaysPending = difftime(Sys.Date(), PendingSince, units = "days"))
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"))
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "# Forms pending", "Pending since", "Days pending"))
+  subjectLevel <- pf %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% summarize(FormCount = n(), PendingSince = min(PendingSince, na.rm = T), DaysPending = difftime(Sys.Date(), PendingSince, units = "days"))
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "# Forms pending", "Pending since", "Days pending"))
   widths <- rep(0, ncol(subjectLevel))
   widths[2] <- 105
   widths[5] <- 90
   subjectLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 7))
   
   # Event level ----
-  eventLevel <- pf %>% group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq) %>% summarize(FormCount = n(), PendingSince = min(as.character(PendingSince), na.rm = T), DaysPending = difftime(Sys.Date(), PendingSince, units = "days"), SubjectCount = length(unique(SubjectId)))
+  eventLevel <- pf %>% group_by(StudyName, Country, SiteCode, SiteName, EventName, EventSeq) %>% summarize(FormCount = n(), PendingSince = min(as.character(PendingSince), na.rm = T), DaysPending = difftime(Sys.Date(), PendingSince, units = "days"), SubjectCount = length(unique(interaction(SubjectSeq, SubjectId))))
   eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName", "EventSeq"))
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% eventLevel$EventName]

@@ -33,7 +33,7 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
   rs$StudyName <- rep(params$UserDetails$studyinfo$studyName[1], nrow(rs))
   
   # Prepare data ----
-  rs <- rs %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ReviewedItem, SDV = SdvBy, SDVDATE = SdvDate, SIGNED = SignBy, SIGNEDDATE = SignDate, LOCKED = LockBy, LOCKEDDATE = LockDate, DATAREVIEW = DmBy, DATAREVIEWDATE = DmDate, CLINICALREVIEW = CrBy, CLINICALREVIEWDATE = CrDate)
+  rs <- rs %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ReviewedItem, SDV = SdvBy, SDVDATE = SdvDate, SIGNED = SignBy, SIGNEDDATE = SignDate, LOCKED = LockBy, LOCKEDDATE = LockDate, DATAREVIEW = DmBy, DATAREVIEWDATE = DmDate, CLINICALREVIEW = CrBy, CLINICALREVIEWDATE = CrDate)
   rs$SDV <- as.character(rs$SDV)
   rs$SIGNED <- as.character(rs$SIGNED)
   rs$LOCKED <- as.character(rs$LOCKED)
@@ -44,14 +44,14 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
   # Form Level
   formLevel <- rs %>% 
     mutate(FormName = ifelse(FormName == "", "Event date", FormName))
-  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "FormSeq"))
-  formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ReviewedItem, CLINICALREVIEW, CLINICALREVIEWDATE, DATAREVIEW, DATAREVIEWDATE, SDV, SDVDATE, SIGNED, SIGNEDDATE, LOCKED, LOCKEDDATE)
+  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"))
+  formLevel <- formLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, EventDate, ActivityId, ActivityName, FormName, FormSeq, ReviewedItem, CLINICALREVIEW, CLINICALREVIEWDATE, DATAREVIEW, DATAREVIEWDATE, SDV, SDVDATE, SIGNED, SIGNEDDATE, LOCKED, LOCKEDDATE)
   if (!is.na(visitOrder)) {
     visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Event ", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Reviewed Item", "Clinical Review By", "Clinical Review Date", "DM Review By", "DM Review Date", "SDV By", "SDV Date", "Signed By", "Signed Date", "Locked By", "Locked Date"))
+  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Event ", "Event Sequence", "Event Date", "Activity Id", "Activity Name", "Form", "Form Sequence", "Reviewed Item", "Clinical Review By", "Clinical Review Date", "DM Review By", "DM Review Date", "SDV By", "SDV Date", "Signed By", "Signed Date", "Locked By", "Locked Date"))
   widths <- rep(0, ncol(formLevel))
   widths[2] <- 105
   widths[5] <- 90
@@ -78,7 +78,7 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
       SIGNEDPercent = round(SIGNEDCompleted * 100 / total, 1),
       LOCKEDCount = paste0(LOCKEDCompleted, "/", total),
       LOCKEDPercent = round(LOCKEDCompleted * 100 / total, 1),
-      patientsCount = length(unique(SubjectId))
+      patientsCount = length(unique(interaction(SubjectId, SubjectSeq)))
     )
   eventLevel <- eventLevel %>% select(StudyName, Country, SiteCode, SiteName, EventName, EventSeq, CLINICALREVIEWPercent, DATAREVIEWPercent, SDVPercent, SIGNEDPercent, LOCKEDPercent, CLINICALREVIEWCount, DATAREVIEWCount, SDVCount, SIGNEDCount, LOCKEDCount, patientsCount)
   eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName", "EventSeq"))
@@ -98,7 +98,7 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
   
   # Subject Level
   subjectLevel <- rs %>%
-    group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>%
+    group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>%
     summarize(
       SDVCompleted = sum(SDV != "" & SDV != "N/A"),
       CLINICALREVIEWCompleted = sum(CLINICALREVIEW != "" & CLINICALREVIEW != "N/A"),
@@ -118,15 +118,15 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
       LOCKEDCount = paste0(LOCKEDCompleted, "/", total),
       LOCKEDPercent = round(LOCKEDCompleted * 100 / total, 1)
     )
-  subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, CLINICALREVIEWPercent, DATAREVIEWPercent, SDVPercent, SIGNEDPercent, LOCKEDPercent, CLINICALREVIEWCount, DATAREVIEWCount, SDVCount, SIGNEDCount, LOCKEDCount)
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"))
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "CR %", "DM %", "SDV %", "Sign %", "Lock %", "CR (n/N)", "DM (n/N)", "SDV (n/N)", "Sign (n/N)", "Lock (n/N)"))
+  subjectLevel <- subjectLevel %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, CLINICALREVIEWPercent, DATAREVIEWPercent, SDVPercent, SIGNEDPercent, LOCKEDPercent, CLINICALREVIEWCount, DATAREVIEWCount, SDVCount, SIGNEDCount, LOCKEDCount)
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "CR %", "DM %", "SDV %", "Sign %", "Lock %", "CR (n/N)", "DM (n/N)", "SDV (n/N)", "Sign (n/N)", "Lock (n/N)"))
   widths <- rep(0, ncol(subjectLevel))
   widths[2] <- 105
   widths[5] <- 90
   subjectLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 6:15))
   headerSubject <- list(
-    firstLevel = c("Study", "Country", "Site Code", "Site name", "Subject", rep("Percentage (%)",5),rep("Count (n/N)",5)),
+    firstLevel = c("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", rep("Percentage (%)",5),rep("Count (n/N)",5)),
     secondLevel = c("CR", "DM", "SDV", "Sign", "Lock", "CR", "DM", "SDV", "Sign", "Lock")
   )
   
@@ -151,7 +151,7 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
       SIGNEDPercent = round(SIGNEDCompleted * 100 / total, 1),
       LOCKEDCount = paste0(LOCKEDCompleted, "/", total),
       LOCKEDPercent = round(LOCKEDCompleted * 100 / total, 1),
-      patientsCount = length(unique(SubjectId))
+      patientsCount = length(unique(interaction(SubjectId, SubjectSeq)))
     )
   siteLevel <- siteLevel %>% select(StudyName, Country, SiteCode, SiteName, CLINICALREVIEWPercent, DATAREVIEWPercent, SDVPercent, SIGNEDPercent, LOCKEDPercent, CLINICALREVIEWCount, DATAREVIEWCount, SDVCount, SIGNEDCount, LOCKEDCount, patientsCount)
   siteLevel <- prepareDataForDisplay(siteLevel, c("SiteCode", "SiteName"))
@@ -185,7 +185,7 @@ if (ncol(rs) == 0 || nrow(rs) == 0) {
       SIGNEDPercent = round(SIGNEDCompleted * 100 / total, 1),
       LOCKEDCount = paste0(LOCKEDCompleted, "/", total),
       LOCKEDPercent = round(LOCKEDCompleted * 100 / total, 1),
-      patientsCount = length(unique(SubjectId))
+      patientsCount = length(unique(interaction(SubjectId, SubjectSeq)))
     )
   countryLevel <- countryLevel %>% select(StudyName, Country, CLINICALREVIEWPercent, DATAREVIEWPercent, SDVPercent, SIGNEDPercent, LOCKEDPercent, CLINICALREVIEWCount, DATAREVIEWCount, SDVCount, SIGNEDCount, LOCKEDCount, patientsCount)
   countryLevel <- prepareDataForDisplay(countryLevel)

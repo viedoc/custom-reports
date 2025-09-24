@@ -47,13 +47,13 @@ if (ncol(tl) == 0 || nrow(tl) == 0) {
   if (missingACT) tl <- tl %>% mutate(ActivityId = "", ActivityName = "")
   
   # Form level ----
-  formLevel <- tl %>% select(StudyName, Country, SiteCode, SiteName, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, EventDate, InitiatedDate, LapseDays)
-  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "EventSeq", "FormSeq"))
+  formLevel <- tl %>% select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, EventDate, InitiatedDate, LapseDays)
+  formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"))
   if (!is.na(visitOrder)) {
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
-    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
+    formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
   }
-  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Event Date", "Initiated Date", "Data Entry Cycle Time (days)"))
+  formLevel <- setLabel(formLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Event", "Event Sequence", "Activity Id", "Activity Name", "Form", "Form Sequence", "Event Date", "Initiated Date", "Data Entry Cycle Time (days)"))
   if (missingACT) formLevel <- formLevel %>% select(-ActivityId, -ActivityName)
   widths <- rep(0, ncol(formLevel))
   widths[2] <- 105
@@ -76,9 +76,9 @@ if (ncol(tl) == 0 || nrow(tl) == 0) {
   eventLevelColumnDefs <- getColumnDefs(colwidths = widths, alignRight = c(3, 6))
   
   # Subject level ----
-  subjectLevel <- tl %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectId) %>% summarize(LapseDays = round(mean(LapseDays, na.rm = T),1), FormCount = n())
-  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName"))
-  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject", "Data Entry Cycle Time (days)", "# Forms"))
+  subjectLevel <- tl %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% summarize(LapseDays = round(mean(LapseDays, na.rm = T),1), FormCount = n())
+  subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"))
+  subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site name", "Subject Sequence", "Subject", "Data Entry Cycle Time (days)", "# Forms"))
   widths <- rep(0, ncol(subjectLevel))
   widths[2] <- 105
   widths[5] <- 90
