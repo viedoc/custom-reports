@@ -72,7 +72,7 @@ For security reasons, only a curated set of packages and functions are available
 > Differences between package versions in your local development environment and in the runtime environment on Viedoc Servers may cause errors. This can be because functions inside packages have been deprecated or changed recently.
 > At the time of writing, the deployed R version is 4.04. To confirm the package versions used on your system and on in the Viedoc runtime environment, use the [version checker script](../utils/version_checker.R).    
 
-Viedoc has developed some additional "utility functions" which are preloaded in the Viedoc Reports runtime environment to assist with data wrangling and presentation. The setup code above loads the utility functions from the downloaded folder into your local development environment. The functions are also available [here](../utils/utilityFunctions.R) and usage information for these functions is provided below. 
+Viedoc has developed some additional "utility functions" which are preloaded in the Viedoc Reports runtime environment to assist with data wrangling and presentation. The setup code above loads the utility functions from the downloaded folder into your local development environment. The functions are also available [here](../utils/utilityFunctions.R) and usage information for these functions is provided [here](utility-function-scripts/README.md). 
 
 <details> <summary><h3> Supported packages </h3></summary>
     
@@ -153,142 +153,7 @@ Viedoc has developed some additional "utility functions" which are preloaded in 
 
 </details>
 
-<details><summary><h3>Utility functions</h3></summary>  
 
-<details><summary>isValid </summary>  
-    
-```R
-isValid(x)
-```
-
-- Purpose: Check whether a value is valid
-- Input parameters: any
-- Returns logical: 
-  - TRUE: 
-    - 1. 
-      - is not atomic
-    - 2. OR
-      - is atomic AND 
-      - is not null AND 
-      - all is not NA AND 
-      - is not character or logical when vector contains no empty strings, omitting NA
-  - FALSE: 
-    - 1. 
-      - is atomic AND 
-      - is null 
-    - 2. OR
-      - is atomic AND 
-      - is not null AND 
-      - all is NA 
-    - 3. OR
-      - is atomic AND 
-      - is not null AND 
-      - all is not NA AND
-      - is character OR Logical AND vector contains no empty strings when omitting NA
-
-</details>
-
-<details><summary>validLevels </summary>  
-    
-```R
-validLevels(vec, type = "", decreasing = T)
-```
-
-- Purpose: Get unique values in a character vector or factor. If the input argument is a factor, unique levels are extracted while dropping the levels that are not present in the input
-- Input params:
-  - Vec - the character vector or factor from which the unique values should be extracted
-  - Type 
-     - if type is left blank, the result is sorted alphabetically.
-     - if type == 'frequency', the result is sorted based on the frequency of the individual values in the input vector
-  - Decreasing 
-    - if type is blank, this value is ignored. 
-    - If type == "frequency", then this value is used to identify the sort order of the frequency
-- Return object
-  - if type == "" & input is a factor, returns levels(vec)[levels(vec) %in% unique(vec)]
-  - if type == "" & input is not a factor, returns sort(unique(vec))
-  - if type == "frequency", returns names(sort(table(vec)[table(vec)!=0], decreasing = decreasing))
-  - else returns character(0)
-
-</details>
-<details><summary>prepareDataForDisplay</summary>  
-    
-```R
-prepareDataForDisplay(data, forceFactor = c(), forceCharacter = c(), blankText = "(blank)", retainFactor = c()
-```
-
-- Purpose: Prepare the data.frame for optimal display via the DT package
-- Input parameters:
-  - Data - data.frame that should be prepared for display 
-  - ForceFactor 
-    - a character vector of column names that should be forced as factor field.
-    - This can be used to force SiteCode into character, without which it would default to numeric.
-    - This will help in an optimal filtering feature for the numeric columns (dropdown instead of range filter)
-  - forceCharacter - a character vector of column names that should be forced as character field. 
-    - Similar usage as forceFactor where there is a need to force a numeric field into character, but not factorize the data
-    - If the column is not listed in this parameter, and if the data contains only numeric value, then the column will be rendered as numeric
-  - blankText - value provided in this parameter will be used to replace blank values
-  - retainFactor 
-    - The function will by default reapply factorization for all the factor fields, character fields (that are not part of forceCharacter),a nd fields that are listed in forceFactor. Hence, for fields that should not lose its assigned factor levels should be listed in this field
-- output: data.frame (or same as input data object)
-
-</details>
-<details><summary>setNAtoBlank</summary>  
-
-```R
-setNAtoBlank(data, replaceWithText = "", forceCharacter = c()
-```
-
-- Purpose: Remove all NA fields and replace them with blank or substitute text
-- Input parameters
-  - data - input data.frame
-  - replaceWithText - Substitute text to be used as replacement for blank values
-  - forceCharacter - a characer vector of columns names that should be forced to character type instead of numeric
-- Output: data.frame
-
-</details>
-<details><summary>getLabel</summary>  
-
-```R
-getLabel(data)
-```    
-   
-- Purpose: Get the column labels of a data.frame as character vector
-- Input parameters: 
-  - data - input data.frame
-- Output: character vector
-
-</details>
-<details><summary>setLabel</summary>  
-
-```R
-setLabel(data, labels)
-```   
-
-- Purpose: Set the column labels of a data.frame
-- Input parameters: 
-  - data - input data.frame
-- Labels - a list of column labels. The number of columns in the data and the count of labels provided in this parameter should match
-- Output: data.frame
-
-</details>
-<details><summary>getColumnDefs</summary>  
-
-```R
-getColumnDefs(colwidths = NA, data = NA, alignRight = NA, alignLeft = NA, alignCenter = NA)
-```
-
-- Purpose: Provide an easy way to define column widths for report outputs. Uses DT package
-- Parameters:
-  - colwidths - a numeric vector of column widths in pixels. Length of this parameter should match the count of columns in the data for which this will be used. This parameter is ignored if data is provided
-  - data - if data if provided, then the column width is calculated based on the data
-  - alignRight - a numeric vector of column numbers that should be right-aligned in display
-  - alignLeft - a numeric vector of column numbers that should be left-aligned in display
-  - alignCenter - a numeric vector of column numbers that should be center-aligned in display
-  - NOTE: While using alignRight, alignLeft, or alignCenter, it is suggested to also include colwidths or data parameter for optimal result
-- Output: list of column definitions as described in DT package.
-
-</details>
-</details>
 
 ## The ‘reportObject’ Output 
 
