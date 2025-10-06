@@ -5,7 +5,7 @@ The goal of this repository is to share information, instructions and examples f
 More information about Viedoc Reports and custom reports can be found in the [Viedoc Reports User Guide](https://help.viedoc.net/c/8a3600).
 
 ## Repository contents
-- **Custom reports instructions and troubleshooting:** This README contains information and resources on how to develop a custom report, including:
+- **Custom reports instructions-and-troubleshooting.md:** This README contains information and resources on how to develop a custom report, including:
     - Prerequisits & setup
     - Details about input data available
     - Available packages and functions in Viedoc reports
