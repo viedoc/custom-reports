@@ -2,25 +2,14 @@
 
 # Check whether a value is valid ----
 # ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-isValid <- function(x) {
-  if (!is.atomic(x)) {
-    return(TRUE)
-  }
-  if (is.null(x)) {
-    return(FALSE)
-  }
-  if (length(x) == 0) {
-    return(FALSE)
-  }
-  if (all(is.na(x))) {
-    return(FALSE)
-  }
-  if (is.character(x) && !any(nzchar(stats::na.omit(x)))) {
-    return(FALSE)
-  }
-  if (is.logical(x) && !any(stats::na.omit(x))) {
-    return(FALSE)
-  }
+isValid <- function (x) 
+{
+  if (!is.atomic(x)) return(TRUE)
+  if (is.null(x)) return(FALSE)
+  if (length(x) == 0) return(FALSE)
+  if (all(is.na(x))) return(FALSE)
+  if (is.character(x) && !any(nzchar(stats::na.omit(x)))) return(FALSE)
+  if (is.logical(x) && !any(stats::na.omit(x))) return(FALSE)
   return(TRUE)
 }
 
@@ -38,14 +27,13 @@ validLevels <- function(vec, type = "", decreasing = T) {
     if (is.factor(vec)) {
       lvls <- levels(vec)
       lvls <- lvls[lvls %in% unique(vec)]
-    } else {
-      lvls <- sort(unique(vec))
     }
+    else lvls <- sort(unique(vec))
   }
   if (type == "frequency") {
     tbl <- table(vec)
     tbl <- tbl[tbl != 0]
-    lvls <- names(sort(tbl, decreasing = decreasing))
+    lvls <- names(sort(tbl,decreasing = decreasing))
   }
   return(lvls)
 }
@@ -64,68 +52,34 @@ validLevels <- function(vec, type = "", decreasing = T) {
 #   blankText - value provided in this parameter will be used to replace blank values
 #   retainFactor - The function will by default reapply factorization for all the factor fields, character fields (that are not part of forceCharacter),
 #                  and fields that are listed in forceFactor. Hence, for fields that should not lose its assigned factor levels should be listed in this field
-prepareDataForDisplay <- function(
-  data,
-  forceFactor = c(),
-  forceCharacter = c(),
-  blankText = "(blank)",
-  retainFactor = c()
-) {
-  forceFactor    <- c(forceFactor, "SubjectId")
-  forceFactor    <- forceFactor[forceFactor %in% colnames(data)]
+prepareDataForDisplay <- function(data, forceFactor = c(), forceCharacter = c(), blankText = "(blank)", retainFactor = c()) {
+  forceFactor <- c(forceFactor, "SubjectId")
+  forceFactor <- forceFactor[forceFactor %in% colnames(data)]
   isFactorFields <- sapply(data, is.factor)
-  factorFields   <- names(isFactorFields)[isFactorFields]
-  retainFactor   <- intersect(retainFactor, factorFields) # Retain only actual factor fields in retainFactor
-  factorFields   <- setdiff(factorFields, retainFactor) # Remove retainFactor fields so that they would not lose their levels
-  factorFields   <- append(factorFields, forceFactor)
-
-  sapply(
-    c(factorFields, forceCharacter), 
-    function(x) data[[x]] <<- ifelse(
-      is.na(data[[x]]), 
-      NA_character_, 
-      as.character(format(data[[x]], scientific = F))
-    )
-  )
-
-  data <- setNAtoBlank(
-    data, 
-    replaceWithText = blankText, 
-    forceCharacter = c(factorFields, forceCharacter)
-  )
-  sapply(
-    colnames(data),
-    function(x) {
-      if (!x %in% retainFactor) {
-        if (
-          (
-            !is.numeric(type.convert(as.character(data[[x]]))) ||
-              x %in% factorFields
-          ) && !(
-            x %in% forceCharacter
-          )
-        ) {
-          dvals <- as.character(data[[x]])
-          dvalsContainBlank <- any(dvals == blankText)
-          dvals <- dvals[dvals != blankText]
-          if (is.numeric(type.convert(dvals))) {
-            lvls <- unique(dvals)
-            lvls <- lvls[order(as.numeric(lvls))]
-            if (dvalsContainBlank) lvls <- c(blankText, lvls)
-          } else {
-            lvls <- as.character(sort(unique(data[[x]])))
-          }
-          data[[x]] <<- factor(data[[x]], levels = lvls)
-        } else if (
-          x %in% forceCharacter
-        ) {
-          data[[x]] <<- as.character(data[[x]])
-        } else {
-          data[[x]] <<- as.numeric(data[[x]])
+  factorFields <- names(isFactorFields)[isFactorFields]
+  retainFactor <- intersect(retainFactor, factorFields) # Retain only actual factor fields in retainFactor
+  factorFields <- setdiff(factorFields, retainFactor) # Remove retainFactor fields so that they would not lose their levels
+  factorFields <- append(factorFields, forceFactor)
+  sapply(c(factorFields,forceCharacter), function(x) data[[x]] <<- ifelse(is.na(data[[x]]),NA_character_,as.character(format(data[[x]], scientific = F))))
+  data <- setNAtoBlank(data, replaceWithText = blankText, forceCharacter = c(factorFields, forceCharacter))
+  sapply(colnames(data), function(x) {
+    if (!x %in% retainFactor) {
+      if ((!is.numeric(type.convert(as.character(data[[x]]))) || x %in% factorFields) && !(x %in% forceCharacter)) {
+        dvals <- as.character(data[[x]])
+        dvalsContainBlank <- any(dvals == blankText)
+        dvals <- dvals[dvals != blankText]
+        if (is.numeric(type.convert(dvals))) {
+          lvls <- unique(dvals)
+          lvls <- lvls[order(as.numeric(lvls))]
+          if (dvalsContainBlank) lvls <- c(blankText, lvls)
         }
+        else lvls <- as.character(sort(unique(data[[x]])))
+        data[[x]] <<- factor(data[[x]], levels = lvls)
       }
+      else if (x %in% forceCharacter) data[[x]] <<- as.character(data[[x]])
+      else data[[x]] <<- as.numeric(data[[x]])
     }
-  )
+  })
   return(data)
 }
 
@@ -136,50 +90,15 @@ prepareDataForDisplay <- function(
 #   data - input data.frame
 #   replaceWithText - Substitute text to be used as replacement for blank values
 #   forceCharacter - a characer vector of columns names that should be forced to character type instead of  numeric
-setNAtoBlank <- function(
-  data, replaceWithText = "", forceCharacter = c()
-) {
-  if (nrow(data) == 0) {
-    return(data)
-  }
+setNAtoBlank <- function(data, replaceWithText = "", forceCharacter = c()) {
+  if (nrow(data) == 0) return(data)
   data <- data %>% data.frame()
-  sapply(colnames(data), function(col) {
-    ifelse(
-      !col %in% forceCharacter &&
-        "character" %in% class(data[[col]]) &&
-        is.numeric(type.convert(as.character(data[[col]]))),
-      data[[col]] <<- as.numeric(data[[col]]),
-      ""
-    )
-  })
-  data[
-    , which(sapply(data, class) == "character")
-  ][
-    is.na(data[
-      , which(sapply(data, class) == "character")
-    ])
-  ] <- ""
-  sapply(
-    colnames(data),
-    function(col) {
-      if (
-        "character" %in% class(data[[col]])
-      ) data[[col]] <<- trimws(data[[col]])
-    }
-  )
-  if (
-    replaceWithText != "" &&
-      length(which(sapply(data, class) == "character")) > 0
-  ) {
-    data[
-      , which(sapply(data, class) == "character")
-    ][
-      data[
-        , which(sapply(data, class) == "character")
-      ] == ""
-    ] <- replaceWithText
-  }
-  data[, which(sapply(data, class) == "logical")][is.na(data[, which(sapply(data, class) == "logical")])] <- ""
+  sapply(colnames(data), function(col) 
+    ifelse(!col %in% forceCharacter && "character" %in% class(data[[col]]) && is.numeric(type.convert(as.character(data[[col]]))), data[[col]] <<- as.numeric(data[[col]]), ""))
+  data[,which(sapply(data, class) == "character")][is.na(data[,which(sapply(data, class) == "character")])] <- ""
+  sapply(colnames(data), function(col) if ("character" %in% class(data[[col]])) data[[col]] <<- trimws(data[[col]]))
+  if (replaceWithText != "" && length(which(sapply(data, class) == "character")) > 0) data[,which(sapply(data, class) == "character")][data[,which(sapply(data, class) == "character")] == ""] <- replaceWithText
+  data[,which(sapply(data, class) == "logical")][is.na(data[,which(sapply(data, class) == "logical")])] <- ""
   return(data)
 }
 
@@ -189,15 +108,11 @@ setNAtoBlank <- function(
 # Parameters:
 #   data - input data.frame
 getLabel <- function(data) {
-  as.character(
-    sapply(
-      colnames(data), function(x) {
-        lbl <- attr(data[[x]], "label")
-        if (!isValid(lbl) || lbl == "NA") lbl <- x
-        lbl
-      }
-    )
-  )
+  as.character(sapply(colnames(data), function(x) {
+    lbl <- attr(data[[x]],"label")
+    if (!isValid(lbl) || lbl == "NA") lbl <- x
+    lbl
+  }))
 }
 
 # setLabel ----
@@ -207,16 +122,8 @@ getLabel <- function(data) {
 #   data - input data.frame
 #   labels - a list of column labels. The number of columns in the data and the count of labels provided in this parameter should match
 setLabel <- function(data, labels) {
-  if (
-    is.list(labels) && 
-      length(labels) == ncol(data)
-  ) {
-    sapply(
-      1:length(labels),
-      function(col){
-        attr(data[[col]], "label") <<- labels[[col]]
-      }
-    )
+  if (is.list(labels) && length(labels) == ncol(data)) {
+    sapply(1:length(labels), function(col) attr(data[[col]], "label") <<- labels[[col]])
   }
   return(data)
 }
@@ -232,66 +139,70 @@ setLabel <- function(data, labels) {
 #   alignLeft - a numeric vector of column numbers that should be left-aligned in display
 #   alignCenter - a numeric vector of column numbers that should be center-aligned in display
 #   NOTE: While using alignRight, alignLeft, or alignCenter, it is suggested to also include colwidths or data parameter for optimal result
-getColumnDefs <- function(
-  colwidths   = NA,
-  data        = NA,
-  alignRight  = NA,
-  alignLeft   = NA,
-  alignCenter = NA
-) {
+getColumnDefs <- function(colwidths = NA, data = NA, alignRight = NA, alignLeft = NA, alignCenter = NA) {
   columnDefs <- list()
-  if (isValid(colwidths) && !isValid(data)) {
-    columnDefs <- lapply(
-      1:length(colwidths),
-      function(x) {
-        list(
-          width = paste0(colwidths[x], "px"),
-          targets = x - 1
-        )
-      }
-    )
-  }
+  if (isValid(colwidths) && !isValid(data)) columnDefs <- lapply(1:length(colwidths), function(x) list(width = paste0(colwidths[x],"px"), targets = x - 1))
   if (isValid(data)) {
-    for (
-      i in 1:length(colnames(data))
-    ) {
+    for (i in 1:length(colnames(data))) {
       col <- colnames(data)[i]
-      suppressWarnings({
-        fldlen <- max(nchar(as.character(data[[col]])), na.rm = T)
-      })
-      columnDefs[[length(columnDefs) + 1]] <- list(
-        width = ifelse(is.na(fldlen),
-          "150px",
-          ifelse(fldlen < 20,
-            "100px",
-            ifelse(fldlen < 200, "150px", "250px")
-          )
-        ),
-        targets = c(i - 1)
-      )
+      suppressWarnings({fldlen <- max(nchar(as.character(data[[col]])), na.rm = T)})
+      columnDefs[[length(columnDefs) + 1]] <- list(width = ifelse(is.na(fldlen),
+                                                                  "150px",
+                                                                  ifelse(fldlen < 20,
+                                                                         "100px",
+                                                                         ifelse(fldlen < 200,"150px","250px"))),
+                                                   targets = c(i - 1))
     }
   }
-  if (isValid(alignRight)) {
-    columnDefs[[
-      length(columnDefs) + 1
-    ]] <- list(
-        className = "dt-right", 
-        targets = alignRight - 1
-      )
-  } else if (isValid(alignLeft)) {
-    columnDefs[[
-      length(columnDefs) + 1
-    ]] <- list(
-      className = "dt-left", 
-      targets = alignLeft - 1
-    )
-  } else if (isValid(alignCenter)) {
-    columnDefs[[
-      length(columnDefs) + 1
-    ]] <- list(
-      className = "dt-center", 
-      targets = alignCenter - 1
-    )
-  }
+  if (isValid(alignRight)) columnDefs[[length(columnDefs) + 1]] <- list(className = 'dt-right', targets = alignRight - 1)
+  if (isValid(alignLeft)) columnDefs[[length(columnDefs) + 1]] <- list(className = 'dt-left', targets = alignLeft - 1)
+  if (isValid(alignCenter)) columnDefs[[length(columnDefs) + 1]] <- list(className = 'dt-center', targets = alignCenter - 1)
   return(columnDefs)
 }
+
+# Get total entered items in crf ----
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# Purpose: Extract and summarize filled data fields from a list of CRF.
+# Parameters:
+#   crf- A named list of data frames.
+#   params - A list containing user and study metadata.
+# Returns:
+#  A data frame summarizing the number of filled fields per subject per form per event.
+getCRFitems <- function(crf, params){
+  formRecords <- data.frame()
+  for (i in names(crf)) {
+    edcForm <- crf[[i]] %>% 
+      mutate(StudyName = params$UserDetails$studyinfo$studyName[1], FormId = i) %>%
+      select(-c(SiteSeq, EventDate, ActivityId, ActivityName, SubjectFormSeq, OriginSubjectFormSeq, SourceSubjectFormSeq, DesignVersion, InitiatedBy, InitiatedDate, LastEditedBy, LastEditedDate, ends_with("CD")))
+    Records <- edcForm %>%
+      group_by(StudyName, Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, FormId, FormSeq) %>%
+      summarise(across(everything(), ~sum(!is.na(.)))) %>%
+      ungroup() %>%
+      rowwise() %>%
+      mutate(Total_filled = sum(c_across(!c(StudyName, Country, CountryCode, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, FormId, FormSeq)), na.rm = T)) %>%
+      ungroup %>%
+      data.frame() %>%
+      select(StudyName, Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, FormId, FormSeq, Total_filled)
+    formRecords <- rbind(formRecords, Records)
+  }
+  return(formRecords)
+}
+
+# Generate a color palette ----
+# ^^^^^^^^^^^^^^^^^^^^^^^^
+# Purpose: Generate a list of distinct colors.
+# Parameters:
+#  colorCount - (Optional) Integer specifying the number of colors needed. If NULL or 0, the full base palette is returned.
+# Returns:
+#  A character vector of hex color codes of the requested length.
+GetColors <- function(colorCount = NULL){
+  cbPalette <- c("#00AC26","#FF2E00","#3798E8","#7B4DFF","#F86800","#EBE73D","#6A0023","#008726","#E0420D","#6F77FF","#0086D2")
+  if (!is.na(colorCount) || colorCount == 0) colorCount <- length(cbPalette)
+  getPalette = colorRampPalette(cbPalette)
+  if(colorCount<=length(cbPalette)) colorsList <- cbPalette[1:colorCount]
+  else colorsList <- getPalette(colorCount)
+  return(colorsList)
+}
+
+# Plotly fonts ----
+globalFont <- list(family = "Viedoc Monument Grotesk", size = 14)
