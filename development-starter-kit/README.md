@@ -36,4 +36,4 @@ Report developers who need to prototype, debug, or extend custom report scripts 
 - [Custom report examples](https://help.viedoc.net/c/8a3600/9fc73b/en/)
 
 ## Notes
-- The Viedoc Reports production environment currently runs on R 4.0.4; slight version differences from the local lockfile may exist but are mitigated through `renv`. The lockfile was generated in a Windows x64 environment. There may be issues on alternative systems
+- The Viedoc Reports production environment currently runs on R 4.0.4; slight version differences from the local lockfile may exist but are mitigated through `renv`. The lockfile was generated in a Windows x64 environment. There may be issues on alternative systems.
