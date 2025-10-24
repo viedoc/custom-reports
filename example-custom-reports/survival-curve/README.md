@@ -1,4 +1,5 @@
 # Survival curve
+[Repository overview](../../README.md)
 
 ## Purpose
 Document the survival curve example report so you can understand its inputs, outputs, and visualization behavior before adapting it.
@@ -24,12 +25,8 @@ Developers and analysts who plan to reuse or modify the survival analysis exampl
 
 ## Tips / Troubleshooting / FAQs
 - Ensure censoring logic matches your study's disposition codes; update the mapping in the script if necessary.
-- Verify that time-to-event units (days vs. weeks) align with study conventions before distributing the report.
-- Use `generate_empty_output()` from `utility-function-scripts` if you repurpose the script for designs with optional forms.
+- Verify that time-to-event units (days vs. weeks) align with study conventions before the report.
 
 ## Additional resources
 - [Example custom reports overview](../README.md)
 - [Creating custom reports (Viedoc Learning)](https://help.viedoc.net/c/8a3600/6e9c82/en/)
-
-## Notes
-- Keep the screenshot path up to date if assets move; update this README when you add new visuals or parameters.
