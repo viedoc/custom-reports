@@ -1,30 +1,39 @@
-# Title
+# Development starter kit
+[Repository overview](../README.md)
+  
+## Purpose
+Supply an opinionated R setup that mirrors the Viedoc Reports runtime so contributors can validate custom reports locally before uploading them while avoiding including "forbbiden" functions in their custom report.
 
-1. Download this starter kit as a zip file, or clone this repository locally
-2. Drop files: extract the files from SampleForCustomReports.zip into  source/exports. If you need your full dataset to test specific cases, add a clinic .xlsx and/or .csv export (include all additional data _except_ uplaoded files)
-3. Setup: open RStudio → open folder → run install_or_restore.R.
-4. Render: run render_report.R.
-5. Change inputs: edit .Renviron or config.yml (no code editing required).
+## Audience
+Report developers who need to prototype, debug, or extend custom report scripts on their workstation.
 
-Notes on versions: Local uses latest R 4.x; the lockfile records R 4.5.1, which may differ from the Shiny server’s 4.0.x.
+## Prerequisites
+- R 4.x installed locally with permission to install packages.
+- RStudio or another IDE capable of running R projects.
+- Access to Viedoc sample data exports or study-specific `.rds`/`.xlsx` files.
+- Installation of `renv` R package
 
-# custom-customer-solutions
+## Instructions
+1. Clone the repository or download the zipped `development-starter-kit/` folder.
+2. Populate `source/` with the sample data produced by Viedoc (replacing the provided demo files).
+3. Open the folder in RStudio and run `renv::restore()` (automatically triggered through `.Rprofile`) to align package versions with the Viedoc runtime (`renv.lock` targets R 4.5.1).
+4. Execute `env_setup.R` to load the sample data, utility functions, and configuration variables into your session. Set `local_project_path` to the root folder when prompted.
+5. Use `SampleReportCode.R` or your own scripts as a template, sourcing any helpers from `utility-function-scripts/` as needed.
 
-Currently limited to R scripts and/or API scripts. other artifacts such as xmls remain in sharepoint.
+## Outputs / Expected results
+- Reproducible local environment that aligns with the server package set.
+- Preloaded `edcData`, `metadata`, `params`, and utility functions for rapid iteration.
+- Working example script that demonstrates report rendering end to end.
 
-[Repo shortcut](https://dev.azure.com/pcgsolutions/_git/Custom%20customer%20solutions?path=%2Frenv.lock&version=GBmain&_a=contents)
+## Tips / Troubleshooting / FAQs
+- If packages fail to install, verify the local R version and reinstall `renv` (`install.packages("renv")`) before running `renv::restore()`.
+- Install or update `Rtools`
+- Keep study-specific exports outside of version control; add them to `source/` but exclude them from commits.
+- Update `env_setup.R` cautiously; shared helpers rely on the structure documented in `utility-function-scripts/README.md`.
 
-structure should be
-- client_name
-  - work-order_id
-    - specific project/task/report
+## Additional resources
+- [Viedoc Reports User Guide](https://help.viedoc.net/c/8a3600)
+- [Custom report examples](https://help.viedoc.net/c/8a3600/9fc73b/en/)
 
-When working on custom reports: 
-- install.packages("renv")
-  - this will not completely mimic server setup because that's on R 4.0.x but it's better practcie than writing install in R.
-  - additional packages added for dev env convenience: 
-    - readxl (to read data from excel rather than RDS)
-    - jsonlite (for VS code plugin. is a requirement for other packages though.)
-- add sample data (rds/xlsx/csv) in the subfolder
-- add path to project folder as `local_project_path=""` in [./env_setup.R], include any additional data import files and run the script to load data, libraries and utils to R environment.
-
+## Notes
+- The Viedoc Reports production environment currently runs on R 4.0.4; slight version differences from the local lockfile may exist but are mitigated through `renv`. The lockfile was generated in a Windows x64 environment. There may be issues on alternative systems
