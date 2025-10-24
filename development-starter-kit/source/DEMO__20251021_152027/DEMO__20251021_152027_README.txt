@@ -1,0 +1,8 @@
+﻿README:
+
+Output version: Viedoc 4.79
+
+All date/time fields set by the system are in UTC. All other date/time fields are user edited.
+
+The meaning of all signatures is that the user has confirmed that all data recorded is in accordance with applicable regulations – unless otherwise stated in supporting documentation.
+The signatures are manifested by "SignBy" and "SignDate" in the "Review status" dataset.

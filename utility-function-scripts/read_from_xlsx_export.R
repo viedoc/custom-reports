@@ -1,5 +1,3 @@
-# install.packages("readxl")
-library(readxl)
 
 read_excel_all_sheets <- function(filename, tibble = TRUE) {
   sheet <- readxl::excel_sheets(filename)
