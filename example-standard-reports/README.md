@@ -32,6 +32,9 @@ Developers and analysts who need to understand or extend the behavior of Viedoc 
 - `12_manual_queries.R`
 - `13_validation_queries.R`
 - `14_prequeries.R`
+- `15_key_risk_indicators.R`
+- `16_audit_trail_overview.R`
+- `17_audit_trail_change_over_time.R`
 
 ## Outputs / Expected results
 - One-to-one script copies of the standard reports, ready for local execution.
