@@ -46,9 +46,9 @@ Developers and analysts who need to understand or extend the behavior of Viedoc 
 - Use `utility-function-scripts/utilityFunctions.R` for helper functions that are common across reports.
 
 ## Additional resources
-- [Repository overview](../README.md)
-- [Custom report examples](../example-custom-reports/README.md)
-- [Viedoc Reports User Guide](https://help.viedoc.net/c/8a3600)
+- [Custom reports repository overview](../README.md)
+- [Example custom reports overview](../example-custom-reports/README.md)
+- <a href="https://help.viedoc.net/c/8a3600" target="_blank" rel="noopener noreferrer">Viedoc Learning – Viedoc Reports User Guide</a>
 
 ## Notes
 - Scripts do not include package installation commands or environment configuration; run them within the prepared development environment.
