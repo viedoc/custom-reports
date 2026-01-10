@@ -1,6 +1,5 @@
 #----------Audit Trail (AT) Report - Change Over Time----------
 
-
 # Get unique event name
 if ("StudyEventDef" %in% names(metadata)) {
   visitOrderDF <<- metadata$StudyEventRef %>%
