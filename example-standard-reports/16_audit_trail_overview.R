@@ -1,4 +1,4 @@
-#----------Audit Trail Report - Overview----------
+#----------Audit Trail (AT) Report - Overview----------
 
 # Get unique event name
 if ("StudyEventDef" %in% names(metadata)) {
