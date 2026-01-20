@@ -57,25 +57,25 @@ if (length(medDRA) == 0 && length(whoDD) == 0 && length(medDRA_J) == 0 && length
   
   # UTR for WhoDD ----
   if (ncol(whoDD) > 0 && nrow(whoDD) > 0) {
-    whoDD <- whoDD %>% mutate(DrugName = gsub(";","<br>",DrugName), Ingredients = gsub(";","<br>",Ingredients), ATCCodes = gsub(";","<br>",ATCCodes), PreferredName = gsub(";","<br>",PreferredName))
-    colsToFactor <- c("SiteSeq", "SiteCode", "SubjectSeq", "EventSeq", "FormSeq", "SubjectFormSeq", "OriginSubjectFormSeq", "SourceSubjectFormSeq", "CodeSeqNumber", "Drug Code", "MedProdId", "PreferredCode")
+    whoDD <- whoDD %>% mutate(DrugName = gsub(";","<br>",DrugName), Ingredients = gsub(";","<br>",Ingredients), ATCCodes = gsub(";","<br>",ATCCodes), SubstanceName = gsub(";","<br>",SubstanceName))
+    colsToFactor <- c("SiteSeq", "SiteCode", "SubjectSeq", "EventSeq", "FormSeq", "SubjectFormSeq", "OriginSubjectFormSeq", "SourceSubjectFormSeq", "CodeSeqNumber", "Drug Code", "MedProdId", "SubstanceCode")
     whoDD_raw <- prepareDataForDisplay(whoDD, c("SiteName", colsToFactor))
     whoDD_raw <- setLabel(whoDD_raw, as.list(getLabel(whoDD)))
     colsToFactor <- c(colsToFactor, "EventDate", "CodedOnDate", "ApprovedOnDate")
     dictList <- append(dictList, list("WHODrug" = list("data" = whoDD_raw, "columnDefs" = getColumnDefs(colwidths = rep(0, ncol(whoDD_raw)), alignRight = which(colnames(whoDD_raw) %in% colsToFactor)))))
     utr_whoDD <- whoDD %>% 
       mutate(Term = toupper(gsub("\\s+", " ", str_trim(Term)))) %>% 
-      select(Term, DrugCode, DrugName, ATCCodes, PreferredName, OldForm, ApprovedByUser, DictInstance, Version, CodedOnDate) %>% 
-      group_by(Term, DrugCode, DrugName, ATCCodes, PreferredName) %>%
-      mutate(OldForm = ifelse(all(OldForm == "N"), "N", "Y"), num_coded = n(), num_approved = sum(!is.na(ApprovedByUser)), DictInstance = str_trim(str_split_fixed(DictInstance,",",2)[,2]), Version = ifelse(Version == "" | is.na(Version), DictInstance, Version), LastCodedOn = max(substr(as.character(CodedOnDate),1,10))) %>% 
+      select(Term, DrugCode, DrugName, ATCCodes, SubstanceName, ArchivedRecord, ApprovedByUser, DictInstance, Version, CodedOnDate) %>% 
+      group_by(Term, DrugCode, DrugName, ATCCodes, SubstanceName) %>%
+      mutate(ArchivedRecord = ifelse(all(ArchivedRecord == "N"), "N", "Y"), num_coded = n(), num_approved = sum(!is.na(ApprovedByUser)), DictInstance = str_trim(str_split_fixed(DictInstance,",",2)[,2]), Version = ifelse(Version == "" | is.na(Version), DictInstance, Version), LastCodedOn = max(substr(as.character(CodedOnDate),1,10))) %>% 
       select(-ApprovedByUser, -DictInstance, -CodedOnDate) %>% 
       data.frame()
     utr_whoDD$Version <- sapply(utr_whoDD$Version, function(x) ifelse(grepl("^[0-9]", x),paste("Ver",x),x))
     utr_whoDD <- utr_whoDD %>% 
-      group_by(Term, DrugCode, DrugName, ATCCodes, PreferredName, Version) %>% 
+      group_by(Term, DrugCode, DrugName, ATCCodes, SubstanceName, Version) %>% 
       mutate(ver_count = n()) %>% 
       distinct() %>% 
-      select(num_coded, num_approved, Term, DrugCode, DrugName, ATCCodes, PreferredName, OldForm, LastCodedOn, Version, ver_count) %>% 
+      select(num_coded, num_approved, Term, DrugCode, DrugName, ATCCodes, SubstanceName, ArchivedRecord, LastCodedOn, Version, ver_count) %>% 
       spread(Version, ver_count, fill = 0) %>%
       arrange(Term)
     
@@ -85,9 +85,9 @@ if (length(medDRA) == 0 && length(whoDD) == 0 && length(medDRA_J) == 0 && length
       group_by(Term) %>%
       mutate(Discrepancy = ifelse(n() > 1, "Yes", "No")) %>%
       ungroup() %>% 
-      select(c("num_coded", "Term", "PreferredName", "DrugName", "DrugCode", "ATCCodes", "OldForm", "Discrepancy", "LastCodedOn", all_of(verCols), "num_approved")) %>% 
+      select(c("num_coded", "Term", "SubstanceName", "DrugName", "DrugCode", "ATCCodes", "ArchivedRecord", "Discrepancy", "LastCodedOn", all_of(verCols), "num_approved")) %>% 
       mutate(num_not_approved = num_coded - num_approved)
-    colLabels <- as.list(c("# Coded terms", "Term", "Preferred Name", "Drug Name", "Drug Code", "ATC Code", "Old Form", "Coding Discrepancy", "Last term coded on", verCols, "# Coded terms approved", "# Coded terms not approved"))
+    colLabels <- as.list(c("# Coded terms", "Term", "Substance Name", "Drug Name", "Drug Code", "ATC Code", "Archived Record", "Coding Discrepancy", "Last term coded on", verCols, "# Coded terms approved", "# Coded terms not approved"))
     utr_whoDD <- prepareDataForDisplay(utr_whoDD)
     utr_whoDD <- setLabel(utr_whoDD, colLabels)
     
