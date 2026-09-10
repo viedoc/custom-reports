@@ -6,6 +6,7 @@ ss <- edcData$SubjectStatus
 rs <- edcData$ReviewStatus
 pf <- edcData$PendingForms
 qry <- edcData$ProcessedQueries
+event_instances <- edcData$EventDates
 
 if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (ncol(pf) == 0 || nrow(pf) == 0))) {
   reportOutput <- list("data" = list("data" = output))
@@ -32,11 +33,11 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
                         ifelse(!is.na(SignBy), "Yes", "No"),
                         ifelse(SignBy == "N/A", "N/A", ""))
       ) %>% 
-      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormSeq, FormId, Initiated, Completed, Signed)
   }
   if(nrow(pf) > 0) {
-    pf <- pf %>% 
-      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName) %>% 
+    pf <- pf %>%
+      select(Country, SiteName, SiteCode, SubjectSeq, SubjectId, EventSeq, EventId, EventName, ActivityId, ActivityName, FormName, FormId) %>%
       mutate(EventSeq = as.character(EventSeq), Initiated = "No", Completed = "", Signed = "", FormSeq = NA)
   }
   fs <- rbind(rs, pf) %>% mutate(StudyName = params$UserDetails$studyinfo$studyName[1])
@@ -44,6 +45,23 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
   # Get visit order ----
   visitOrder <- c()
   if (nrow(fs) > 0) {
+    # Exclude hidden forms ---- a form instance inherits the design version of its event instance
+    if ("FormDef" %in% names(metadata) && nrow(metadata$FormDef) > 0 && nrow(event_instances) > 0) {
+      eventDesigns <- event_instances %>%
+        mutate(EventSeq = as.character(EventRepeatKey), EventId = as.character(EventId), MDVOID = as.character(DesignVersion)) %>%
+        distinct(SiteCode, SubjectSeq, EventId, EventSeq, MDVOID)
+      formDefs <- metadata$FormDef %>%
+        select(MDVOID, FormId = OID, Hidden) %>%
+        mutate(MDVOID = as.character(MDVOID), FormId = as.character(FormId))
+      latestDefs <- formDefs %>% arrange(desc(as.numeric(MDVOID))) %>% distinct(FormId, .keep_all = TRUE)
+      fs <- fs %>%
+        left_join(eventDesigns, by = c("SiteCode", "SubjectSeq", "EventId", "EventSeq")) %>%
+        # common events have no EventDates row, so fall back to the newest version defining the form
+        mutate(MDVOID = coalesce(MDVOID, latestDefs$MDVOID[match(FormId, latestDefs$FormId)])) %>%
+        left_join(formDefs, by = c("MDVOID", "FormId")) %>%
+        filter(is.na(Hidden) | Hidden != "Yes") %>%
+        select(-MDVOID, -Hidden)
+    }
     if ("StudyEventDef" %in% names(metadata)) {
       visitOrder <- metadata$StudyEventRef %>%
         rename(EventId = StudyEventOID) %>% 
@@ -99,7 +117,7 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
     select(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId, SubjectStatus, EventName, EventSeq, ActivityId, ActivityName, FormName, FormSeq, Initiated, Completed, Signed)
   formLevel$SubjectStatus <- factor(formLevel$SubjectStatus, levels = ssOrder)
   formLevel <- prepareDataForDisplay(formLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq", "FormSeq"), retainFactor = c("EventName","SubjectStatus"))
-  if (!is.na(visitOrder)) {
+  if (length(visitOrder) > 0) {
     visitOrder <- visitOrder[visitOrder %in% formLevel$EventName]
     formLevel$EventName <- factor(formLevel$EventName, levels = visitOrder)
     formLevel <- formLevel %>% group_by(StudyName, Country, SiteCode, SiteName, SubjectSeq, SubjectId) %>% arrange(EventName, EventSeq, .by_group = TRUE)
@@ -122,7 +140,7 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
       initiationProgress = round(countInitiated*100/Triggered, 2)
     ) %>% 
     data.frame()
-  if (!is.na(visitOrder)) {
+  if (length(visitOrder) > 0) {
     visitOrder <- visitOrder[visitOrder %in% eventLevel$EventName]
     eventLevel$EventName <- factor(eventLevel$EventName, levels = visitOrder)
     eventLevel <- eventLevel %>% group_by(StudyName, Country, SiteCode, SiteName) %>% arrange(EventName, EventSeq, .by_group = TRUE)
@@ -131,7 +149,7 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
   eventLevel <- prepareDataForDisplay(eventLevel, c("SiteCode", "SiteName", "SubjectSeq", "EventSeq"), retainFactor = c("EventName","SubjectStatus"))
   eventLevel <- setLabel(eventLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event", "Event Sequence", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
   headerEvent <- list(
-    firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Event","Event Sequence", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
+    firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Event","Event Sequence", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
     secondLevel = c("Initiated", "Pending", "Completed", "Saved with issues", "Signed", "Not signed")
   )
   widths <- rep(0, ncol(eventLevel))
@@ -155,7 +173,7 @@ if ((ncol(ss) == 0 || nrow(ss) == 0) || ((ncol(rs) == 0 || nrow(rs) == 0) && (nc
   subjectLevel <- prepareDataForDisplay(subjectLevel, c("SiteCode", "SiteName", "SubjectSeq"), retainFactor = c("SubjectStatus"))
   subjectLevel <- setLabel(subjectLevel, list("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Triggered", "Initiated", "Pending","Completed", "Saved with issues", "Signed", "Not signed", "Form initiation progress (%)"))
   headerSubject <- list(
-    firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject", "Subject Status", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
+    firstLevel = c("Study", "Country", "Site Code", "Site Name", "Subject Sequence", "Subject", "Subject Status", "Triggered", rep("Triggered ",2), rep("Initiated",2), rep("Completed",2),"Form initiation progress (%)"),
     secondLevel = c("Initiated", "Pending", "Completed", "Saved with issues", "Signed", "Not signed")
   )
   widths <- rep(0, ncol(subjectLevel))
